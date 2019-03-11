@@ -1,0 +1,14 @@
+
+[general] 
+name=wmtsCacheServer
+version=1.0.0
+qgisMinimumVersion=3.4
+description=Cache disque pour les tuiles WMTS
+author=David Marteau 
+email=dmarteau@3liz.com 
+server=True 
+tags=server, wmts, cache
+
+
+
+
