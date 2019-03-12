@@ -19,6 +19,8 @@ from contextlib import contextmanager¶
 from hashlib import md5
 from shutil import rmtree
 
+from .layouts import layouts
+
 Hash = Typevar('Hash')
 
 
@@ -49,9 +51,12 @@ def trap():
 
 class DiskCacheMngr:
 
-    def __init__(self, rootdir: Path) -> None:
+    def __init__(self, rootdir: Path, layout: str) -> None:
         self.rootdir = rootdir
-        self.tiles   = rootdir / 'tiles'
+        self.tiledir = rootdir / 'tiles'
+        self._tile_location = layouts.get(layout)
+        if self._tile_location is None:
+            raise ValueError("Unknown tile layout %s" % layout)
 
     def get_project_hash(self, project: 'QgsProject') -> Hash 
         """ Attempt to create a hash from project infos
@@ -96,7 +101,7 @@ class DiskCacheMngr:
         """ Return base path for tiles
         """
         h = self.get_project_hash(project)
-        return self.tiles / h.hexdigest()
+        return self.tiledir / h.hexdigest()
 
     def get_tile_cache(self, project: 'QgsProject', request: 'QgsServerRequest', create_dir: bool=False) -> Path:
         """ Create a cache path for tile
@@ -105,19 +110,16 @@ class DiskCacheMngr:
 
             LAYER (couche, groupe ou projet complet en fonction de la configuration)
             TILEMATRIXSET (le CRS)
-            TILEMATRIX (le z en tms)
-            TILEROW (le x en tms)
-            TILECOL (le y en tms)
+            TILEMATRIX (z en tms)
+            TILEROW (x en tms)
+            TILECOL (y en tms)
             STYLE (le style)
             FORMAT (sous la forme image/*)
-
-            The returned path will be:
-            'hash/z/x1/x2/x3/y1/y2/y3.sfx'
         """
         params = request.parameters()
 
         h = self.get_project_hash(project)
-        cache_dir = h.hexdigest()
+        cache_dir = self.tiledir / h.hexdigest()
 
         h.update(params.get('LAYER','').encode())
         h.update(params.get('TILEMATRIXSET','').encode())
@@ -125,31 +127,14 @@ class DiskCacheMngr:
 
         digest = h.hexdigest()
 
-        level = params['TILEMATRIX']
-        try: 
-          level = "%02d" % level
-        except TypeError:
-          pass
-
-        x,y = params['TILEROW'],params['TILECOL']
+        x,y,z= params['TILEROW'],params['TILECOL'],params['TILEMATRIX']
 
         # Retrieve file suffix from FORMAT spec
         fmt = params.get('FORMAT')
         file_ext = get_image_sfx(fmt) if fmt else '.png'
 
-        parts = (
-            cache_dir,
-            digest,
-            level,
-            "%03d" % int(x / 1000000),
-            "%03d" % (int(x / 1000) % 1000),
-            "%03d" % (int(x) % 1000),
-            "%03d" % int(y / 1000000),
-            "%03d" % (int(y / 1000) % 1000),
-            "%03d.%s" % (int(y) % 1000, file_ext))
-        )
+        p = self._tile_location(cache_dir / digest, x,y,z,file_ext)
 
-        p = self.tiles / os.path.join(*parts)
         if create_dir:
             p.parent.mkdir(mode=0o750, exists_ok=True)
 
@@ -158,10 +143,10 @@ class DiskCacheMngr:
 
 class DiskCacheFilter(QgsServerCacheFilter):
 
-    def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path) -> None:
+    def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path, layout: str) -> None:
         super().__init__(serverIface)
 
-        self._cache = DiskCacheMngr(rootdir)
+        self._cache = DiskCacheMngr(rootdiri, layout)
 
     def setCachedDocument(self, doc: QDomDocument, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         if not doc:
@@ -204,7 +189,6 @@ class DiskCacheFilter(QgsServerCacheFilter):
                 rmtree(cachedir.as_posix())
                 return True
         return False
-
 
     def setCachedImage(self, img: Union[QByteArray, bytes, bytearray], 
             project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:

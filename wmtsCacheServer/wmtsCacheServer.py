@@ -32,5 +32,8 @@ class wmtsCacheServer:
                    'wmtsCache',Qgis.Critical)
             return
 
-        serverIface.registerFilter( DiskCacheFilter(serverIface, rootpath), 50 )
+        # Get tile layout
+        layout = os.getenv('QGIS_WMTS_CACHE_LAYOUT', 'tc')
+
+        serverIface.registerFilter( DiskCacheFilter(serverIface, rootpath, layout), 50 )
 
