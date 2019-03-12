@@ -6,8 +6,7 @@
 
 import os
 
-qgis.core import Qgis, QgsMessageLog
-
+from qgis.core import Qgis, QgsMessageLog
 from pathlib import Path
 
 from .cachefilter import DiskCacheFilter
@@ -16,7 +15,7 @@ class wmtsCacheServer:
     """ Plugin for QGIS server
     """
 
-    def __init__(self, serverIface: 'QgsServerInterface') -> None
+    def __init__(self, serverIface: 'QgsServerInterface') -> None:
         # save reference to the QGIS interface         
         self.serverIface = serverIface
 

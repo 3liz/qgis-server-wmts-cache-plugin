@@ -15,7 +15,7 @@ from qgis.PyQt.QtGui import QImage
 
 from pathlib import Path
 from typing import Union, Mapping, TypeVar
-from contextlib import contextmanager¶
+from contextlib import contextmanager
 from hashlib import md5
 from shutil import rmtree
 
@@ -58,7 +58,7 @@ class DiskCacheMngr:
         if self._tile_location is None:
             raise ValueError("Unknown tile layout %s" % layout)
 
-    def get_project_hash(self, project: 'QgsProject') -> Hash 
+    def get_project_hash(self, project: 'QgsProject') -> Hash:
         """ Attempt to create a hash from project infos
 
             XXX: We are faced to the problem that there is no unambiguous
@@ -91,13 +91,13 @@ class DiskCacheMngr:
 
         return p / (digest + suffix)
 
-    def get_documents_root(self, project: 'QgsProject') -> Path
+    def get_documents_root(self, project: 'QgsProject') -> Path:
         """ Return base path for documents
         """
         h = self.get_project_hash(project)
         return self.rootdir / h.hexdigest()
 
-    def get_tiles_root(self, project: 'QgsProject') -> Path
+    def get_tiles_root(self, project: 'QgsProject') -> Path:
         """ Return base path for tiles
         """
         h = self.get_project_hash(project)
@@ -146,7 +146,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path, layout: str) -> None:
         super().__init__(serverIface)
 
-        self._cache = DiskCacheMngr(rootdiri, layout)
+        self._cache = DiskCacheMngr(rootdir, layout)
 
     def setCachedDocument(self, doc: QDomDocument, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         if not doc:
@@ -168,8 +168,8 @@ class DiskCacheFilter(QgsServerCacheFilter):
                     else:
                         QgsMessageLog.logMessage(
                                 ("Failed to get document content:"
-                                 "Error at line %d, column %d:\n%s\n" % (errorLine, errorColumn, errorStr)
-                                 "File: %s" % p.as_posix())
+                                 "Error at line %d, column %d:\n%s\n"
+                                 "File: %s") % (errorLine, errorColumn, errorStr,p.as_posix())
                                 ,"wmtsCache", Qgis.Critical)
 
         return QByteArray()
@@ -177,7 +177,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def deleteCachedDocument(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         with trap():
             p = self._cache.get_document_cache(project,request)
-            if p.is_file()
+            if p.is_file():
                p.unlink()
                return True
         return False
@@ -204,7 +204,6 @@ class DiskCacheFilter(QgsServerCacheFilter):
         with trap():
             p = self._cache.get_tile_cache(project,request)
             if p.is_file():
-                img = QImage(p.as_posix())
                 with p.open('rb') as f:
                     return QByteArray(f.read())
 
@@ -213,7 +212,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def deleteCachedImage(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         with trap():
             p = self._cache.get_tile_cache(project,request)
-            if p.is_file()
+            if p.is_file():
                p.unlink()
                return True
         return False

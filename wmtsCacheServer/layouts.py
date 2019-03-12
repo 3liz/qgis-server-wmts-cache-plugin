@@ -23,6 +23,50 @@ import os
 from typing import Union, Tuple
 from pathlib import Path
 
+
+def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    try: 
+      level = "%02d" % z
+    except TypeError:
+      pass
+
+    parts = (
+        level,
+        "%03d" % int(x / 1000000),
+        "%03d" % (int(x / 1000) % 1000),
+        "%03d" % (int(x) % 1000),
+        "%03d" % int(y / 1000000),
+        "%03d" % (int(y / 1000) % 1000),
+        "%03d.%s" % (int(y) % 1000, file_ext)
+    )
+
+    return root / os.path.join(*parts)
+
+
+def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    try: 
+      level = "%02d" % z
+    except TypeError:
+      pass
+
+    parts = (
+      level,
+      "%04d" % int(x / 10000),
+      "%04d" % (int(x) % 10000),
+      "%04d" % int(y / 10000),
+      "%04d.%s" % (int(y) % 10000, file_ext)
+    )
+
+    return root / os.path.join(*parts)
+
+def tile_location_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    return root / os.path.join( str(z), str(x), str(y), file_ext )
+
+
+def tile_location_reverse_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    return root / os.path.join( str(y), str(x), str(z), file_ext )
+
+
 layouts = {
     'tc': tile_location_tc,
     'mp': tile_location_mp,
@@ -31,45 +75,5 @@ layouts = {
 }
 
 
-def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
-     try: 
-       level = "%02d" % z
-     except TypeError:
-       pass
 
-     parts = (
-         level,
-         "%03d" % int(x / 1000000),
-         "%03d" % (int(x / 1000) % 1000),
-         "%03d" % (int(x) % 1000),
-         "%03d" % int(y / 1000000),
-         "%03d" % (int(y / 1000) % 1000),
-         "%03d.%s" % (int(y) % 1000, file_ext))
-     )
-
-     return root / os.path.join(*parts)
-
-
-def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
-     try: 
-       level = "%02d" % z
-     except TypeError:
-       pass
-
-     parts = (
-       level,
-       "%04d" % int(x / 10000),
-       "%04d" % (int(x) % 10000),
-       "%04d" % int(y / 10000),
-       "%04d.%s" % (int(y) % 10000, file_ext)
-     )
-
-     return root / os.path.join(*parts)
-
-def tile_location_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
-     return root / os.path.join( str(z), str(x), str(y), file_ext )
-
-
-def tile_location_reverse_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
-     return root / os.path.join( str(y), str(x), str(z), file_ext )
 
