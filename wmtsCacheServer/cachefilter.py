@@ -21,7 +21,7 @@ from shutil import rmtree
 
 from .layouts import layouts
 
-Hash = Typevar('Hash')
+Hash = TypeVar('Hash')
 
 
 def get_image_sfx(fmt: str) -> str:
@@ -46,10 +46,10 @@ def trap():
     try:
         yield
     except Exception as e:
-        QgsMessageLog("WMTS Cache exception: %s\n%s" % (e,traceback.format_exc()) ,"wmtsCache",Qgis.Critical)
+        QgsMessageLog.logMessage("WMTS Cache exception: %s\n%s" % (e,traceback.format_exc()) ,"wmtsCache",Qgis.Critical)
 
 
-class DiskCacheMngr:
+class CacheHelper:
 
     def __init__(self, rootdir: Path, layout: str) -> None:
         self.rootdir = rootdir
@@ -67,27 +67,30 @@ class DiskCacheMngr:
             This prevent us now for caching data from projects not related to file - like
             dynamically built projects.
         """
-        ident = project.filename()
+        ident = project.fileName()
         if not ident:
             raise ValueError("Project with no filename is not supported")
         m = md5()
-        m.update(project.filename().encode())
+        m.update(ident.encode())
         return m
 
-    def get_document_cache(self, project: 'QgsProject', request: 'QgsServerRequest', suffix: str='xml', create_dir: bool=False) -> Path:
+    def get_document_cache(self, project: 'QgsProject', request: 'QgsServerRequest', suffix: str='.xml', create_dir: bool=False) -> Path:
         """ Create a cache path for the document
         """
         params = request.parameters()
 
         h = self.get_project_hash(project)
-        h.update("&".join("%s=%s" % item for items in params.items()).encode())
+
+        # XXX: Take care that that order of items is random !
+        qs = "&".join("%s=%s" % (k,params[k]) for k in sorted(params.keys())).encode()
+        h.update(qs)
         
         digest = h.hexdigest()
 
         # Create subdirs by taking the first letter of the digest
         p = self.rootdir / digest[0]
         if create_dir:
-            p.mkdir(mode=0o750, parents=True, exists_ok=True)
+            p.mkdir(mode=0o750, parents=True, exist_ok=True)
 
         return p / (digest + suffix)
 
@@ -136,7 +139,7 @@ class DiskCacheMngr:
         p = self._tile_location(cache_dir / digest, x,y,z,file_ext)
 
         if create_dir:
-            p.parent.mkdir(mode=0o750, exists_ok=True)
+            p.parent.mkdir(mode=0o750, exist_ok=True)
 
         return p
 
@@ -146,7 +149,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path, layout: str) -> None:
         super().__init__(serverIface)
 
-        self._cache = DiskCacheMngr(rootdir, layout)
+        self._cache = CacheHelper(rootdir, layout)
 
     def setCachedDocument(self, doc: QDomDocument, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         if not doc:
@@ -162,9 +165,10 @@ class DiskCacheFilter(QgsServerCacheFilter):
             p = self._cache.get_document_cache(project,request)
             if p.is_file():
                 with p.open('r') as f:
+                    doc = QDomDocument()
                     statusOK, errorStr, errorLine, errorColumn = doc.setContent(f.read(), True)
                     if statusOK:
-                        return doc.toByteArrary()
+                        return doc.toByteArray()
                     else:
                         QgsMessageLog.logMessage(
                                 ("Failed to get document content:"
@@ -192,7 +196,10 @@ class DiskCacheFilter(QgsServerCacheFilter):
 
     def setCachedImage(self, img: Union[QByteArray, bytes, bytearray], 
             project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
-        
+       
+        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+            return False
+
         with trap():
             p = self._cache.get_tile_cache(project, request, create_dir=True)
             with p.open(mode='wb') as f:
@@ -201,6 +208,10 @@ class DiskCacheFilter(QgsServerCacheFilter):
         return False
 
     def getCachedImage(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> QByteArray:
+
+        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+            return QByteArray()
+
         with trap():
             p = self._cache.get_tile_cache(project,request)
             if p.is_file():
@@ -210,6 +221,10 @@ class DiskCacheFilter(QgsServerCacheFilter):
         return QByteArray()
 
     def deleteCachedImage(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
+
+        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+            return False
+        
         with trap():
             p = self._cache.get_tile_cache(project,request)
             if p.is_file():
@@ -218,6 +233,10 @@ class DiskCacheFilter(QgsServerCacheFilter):
         return False
 
     def deleteCachedImages(self, project: 'QgsProject') -> bool:
+
+        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+            return False
+        
         with trap():
             cachedir = self._cache.get_tiles_root(project)
             if cachedir.is_dir():

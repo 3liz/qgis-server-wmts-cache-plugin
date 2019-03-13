@@ -2,5 +2,11 @@
 *.pyc 
 .DS_Store
 
+.cache
+.local
+
+__output__
+__wmts_cache__
+
 factory.manifest
 

@@ -5,6 +5,7 @@
 """
 
 import os
+import tempfile
 
 from qgis.core import Qgis, QgsMessageLog
 from pathlib import Path
@@ -22,17 +23,16 @@ class wmtsCacheServer:
         # Ensure that configuration is OK
         rootpathstr = os.getenv('QGIS_WMTS_CACHE_ROOTDIR')
         if not rootpathstr:
-            QgsMessageLog.logMessage('QGIS_WMTS_CACHE_ROOTDIR not defined, cache disabled','wmtsCache',Qgis.Critical)
-            return
-
+            # Create cache in /tmp/org.qgis.wmts/cache
+            rootpathstr = os.path.join(tempfile.gettempdir(),'org.qgis.wmts')
+        
         rootpath = Path(rootpathstr)
-        if not rootpath.is_dir():
-            QgsMessageLog.logMessage('WMTS Cache directory %s must exists and must be a directory, cache disabled' % rootpathstr,
-                   'wmtsCache',Qgis.Critical)
-            return
+        rootpath.mkdir(mode=0o750, parents=True, exist_ok=True)
+
+        QgsMessageLog.logMessage('Cache directory set to %s' % rootpathstr,'wmtsCache',Qgis.Info)
 
         # Get tile layout
         layout = os.getenv('QGIS_WMTS_CACHE_LAYOUT', 'tc')
 
-        serverIface.registerFilter( DiskCacheFilter(serverIface, rootpath, layout), 50 )
+        serverIface.registerServerCache( DiskCacheFilter(serverIface, rootpath, layout), 50 )
 
