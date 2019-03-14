@@ -8,7 +8,7 @@ import logging
 
 LOGGER = logging.getLogger('server')
 
-from typing import Mapping, Dict, Generator
+from typing import Any, Mapping, Dict, Generator
 
 from qgis.core import Qgis, QgsApplication, QgsProject,QgsFontUtils
 from qgis.server import (QgsServer, 
@@ -40,13 +40,13 @@ def pytest_sessionstart(session):
     #os.environ['QGIS_DISABLE_MESSAGE_HOOKS'] = 1
     #os.environ['QGIS_NO_OVERRIDE_IMPORT'] = 1
 
-    logging.basicConfig( stream=sys.stderr )
     logging.disable(logging.INFO)
 
     qgis_application = QgsApplication([], False)
 
     # Install logger hook
     install_logger_hook()
+
 
 def pytest_sessionfinish(session, exitstatus):
     """ End qgis session
@@ -90,7 +90,7 @@ class OWSResponse:
     def headers(self) -> Dict[str,str]:
         return self._resp.headers()
 
-    def xpath(self, path: str) -> 'xpath':
+    def xpath(self, path: str) -> lxml.etree.Element:
         assert self.xml is not None
         return self.xml.xpath(path, namespaces=NAMESPACES)
 
@@ -115,13 +115,21 @@ def client(request):
             # Load plugins
             load_plugins(self.server.serverInterface())
 
+        def getplugin(self, name) -> Any:
+            """ retourne l'instance du plugin
+            """
+            return server_plugins.get(name)
+
+        def getprojectpath(self, name: str) -> str:
+            return self.datapath.join(name)
+
         def get(self, query: str, project: str=None) -> OWSResponse:
             """ Return server response from query
             """
             request  = QgsBufferServerRequest(query, QgsServerRequest.GetMethod, {}, None)
             response = QgsBufferServerResponse()
             if project is not None:
-                projectpath = self.datapath.join('projectpath')
+                projectpath = self.datapath.join(project)
                 qgsproject  = QgsProject()
                 qgsproject.read(projectpath.strpath)
             else:

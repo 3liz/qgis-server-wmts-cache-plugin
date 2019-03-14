@@ -14,7 +14,7 @@ from qgis.PyQt.QtXml import QDomDocument
 from qgis.PyQt.QtGui import QImage
 
 from pathlib import Path
-from typing import Union, Mapping, TypeVar
+from typing import Union, Mapping, TypeVar, Dict
 from contextlib import contextmanager
 from hashlib import md5
 from shutil import rmtree
@@ -58,28 +58,20 @@ class CacheHelper:
         if self._tile_location is None:
             raise ValueError("Unknown tile layout %s" % layout)
 
-    def get_project_hash(self, project: 'QgsProject') -> Hash:
+    def get_project_hash(self, ident: str) -> Hash:
         """ Attempt to create a hash from project infos
-
-            XXX: We are faced to the problem that there is no unambiguous
-            way to define unique identifier for a QgsProject except.
-            
-            This prevent us now for caching data from projects not related to file - like
-            dynamically built projects.
         """
-        ident = project.fileName()
         if not ident:
-            raise ValueError("Project with no filename is not supported")
+            raise ValueError("Missing ident value")
         m = md5()
         m.update(ident.encode())
         return m
 
-    def get_document_cache(self, project: 'QgsProject', request: 'QgsServerRequest', suffix: str='.xml', create_dir: bool=False) -> Path:
+    def get_document_cache(self, project: str, params: Dict[str,str], suffix: str='.xml', create_dir: bool=False) -> Path:
         """ Create a cache path for the document
         """
-        params = request.parameters()
-
         h = self.get_project_hash(project)
+        p = self.rootdir / h.hexdigest()
 
         # XXX: Take care that that order of items is random !
         qs = "&".join("%s=%s" % (k,params[k]) for k in sorted(params.keys())).encode()
@@ -88,25 +80,24 @@ class CacheHelper:
         digest = h.hexdigest()
 
         # Create subdirs by taking the first letter of the digest
-        p = self.rootdir / digest[0]
         if create_dir:
             p.mkdir(mode=0o750, parents=True, exist_ok=True)
 
         return p / (digest + suffix)
 
-    def get_documents_root(self, project: 'QgsProject') -> Path:
+    def get_documents_root(self, project: str) -> Path:
         """ Return base path for documents
         """
         h = self.get_project_hash(project)
         return self.rootdir / h.hexdigest()
 
-    def get_tiles_root(self, project: 'QgsProject') -> Path:
+    def get_tiles_root(self, project: str) -> Path:
         """ Return base path for tiles
         """
         h = self.get_project_hash(project)
         return self.tiledir / h.hexdigest()
 
-    def get_tile_cache(self, project: 'QgsProject', request: 'QgsServerRequest', create_dir: bool=False) -> Path:
+    def get_tile_cache(self, project: str, params: Dict[str,str], create_dir: bool=False) -> Path:
         """ Create a cache path for tile
 
             The path is computed according to the folowing parameters:
@@ -119,8 +110,6 @@ class CacheHelper:
             STYLE (le style)
             FORMAT (sous la forme image/*)
         """
-        params = request.parameters()
-
         h = self.get_project_hash(project)
         cache_dir = self.tiledir / h.hexdigest()
 
@@ -136,7 +125,7 @@ class CacheHelper:
         fmt = params.get('FORMAT')
         file_ext = get_image_sfx(fmt) if fmt else '.png'
 
-        p = self._tile_location(cache_dir / digest, x,y,z,file_ext)
+        p = self._tile_location(cache_dir / digest, int(x), int(y), z, file_ext)
 
         if create_dir:
             p.parent.mkdir(mode=0o750, exist_ok=True)
@@ -149,20 +138,24 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path, layout: str) -> None:
         super().__init__(serverIface)
 
+        self._iface = serverIface
         self._cache = CacheHelper(rootdir, layout)
+
+    def get_document_cache( self, project: 'QgsProject', request: 'QgsServerRequest' , create_dir=False) -> Path:
+        return self._cache.get_document_cache(project.fileName(),request.parameters(),create_dir=create_dir)
 
     def setCachedDocument(self, doc: QDomDocument, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         if not doc:
             return False
         with trap():
-            p = self._cache.get_document_cache(project,request, create_dir=True)
+            p = self.get_document_cache(project,request, create_dir=True)
             with p.open(mode='w') as f:
                 f.write(doc.toString())
         return True
 
     def getCachedDocument(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> QByteArray:
         with trap():
-            p = self._cache.get_document_cache(project,request)
+            p = self.get_document_cache(project,request)
             if p.is_file():
                 with p.open('r') as f:
                     doc = QDomDocument()
@@ -180,7 +173,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
 
     def deleteCachedDocument(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         with trap():
-            p = self._cache.get_document_cache(project,request)
+            p = self.get_document_cache(project,request)
             if p.is_file():
                p.unlink()
                return True
@@ -188,11 +181,14 @@ class DiskCacheFilter(QgsServerCacheFilter):
 
     def deleteCachedDocuments(self, project: 'QgsProject') -> bool:
         with trap():
-            cachedir = self._cache.get_documents_root(project)
+            cachedir = self._cache.get_documents_root(project.fileName())
             if cachedir.is_dir():
                 rmtree(cachedir.as_posix())
                 return True
         return False
+
+    def get_tile_cache(self, project: 'QgsProject', request: 'QgsServerRequest' , create_dir=False) -> Path:
+        return self._cache.get_tile_cache(project.fileName(),request.parameters(),create_dir=create_dir)
 
     def setCachedImage(self, img: Union[QByteArray, bytes, bytearray], 
             project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
@@ -213,7 +209,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
             return QByteArray()
 
         with trap():
-            p = self._cache.get_tile_cache(project,request)
+            p = self.get_tile_cache(project,request)
             if p.is_file():
                 with p.open('rb') as f:
                     return QByteArray(f.read())
@@ -226,7 +222,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
             return False
         
         with trap():
-            p = self._cache.get_tile_cache(project,request)
+            p = self.get_tile_cache(project,request)
             if p.is_file():
                p.unlink()
                return True
@@ -234,11 +230,8 @@ class DiskCacheFilter(QgsServerCacheFilter):
 
     def deleteCachedImages(self, project: 'QgsProject') -> bool:
 
-        if request.parameters.get['SERVICE'].upper() != 'WMTS':
-            return False
-        
         with trap():
-            cachedir = self._cache.get_tiles_root(project)
+            cachedir = self._cache.get_tiles_root(project.fileName())
             if cachedir.is_dir():
                 rmtree(cachedir.as_posix())
                 return True

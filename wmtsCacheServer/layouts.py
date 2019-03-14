@@ -1,6 +1,10 @@
 """ Tiles layouts models
 
     From https://github.com/mapproxy/mapproxy/blob/master/mapproxy/cache/path.py
+
+    * `tc`: TileCache compatible layout, (`zz/xxx/xxx/xxx/yyy/yyy/yyy.format`)
+    * `mp`: MapProxy layout (`zz/xxxx/xxxx/yyyy/yyyy.format`), moins de niveaux de repertoire
+    * `tms`: TMS compatible layout (`zz/xxxx/yyyy.format`)
 """
 # Original licence
 # This file is part of the MapProxy project.
@@ -25,45 +29,62 @@ from pathlib import Path
 
 
 def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    """ TileCache compatible layout
+    
+        scheme: zz/xxx/xxx/xxx/yyy/yyy/yyy.format
+    """
     try: 
-      level = "%02d" % z
-    except TypeError:
-      pass
-
+      level = "%02d" % int(z)
+    except ValueError:
+      level = z
+    
     parts = (
         level,
-        "%03d" % int(x / 1000000),
-        "%03d" % (int(x / 1000) % 1000),
-        "%03d" % (int(x) % 1000),
-        "%03d" % int(y / 1000000),
-        "%03d" % (int(y / 1000) % 1000),
-        "%03d.%s" % (int(y) % 1000, file_ext)
+        "%03d" % (x // 1000000),
+        "%03d" % ((x / 1000) % 1000),
+        "%03d" % ((x) % 1000),
+        "%03d" % (y // 1000000),
+        "%03d" % ((y // 1000) % 1000),
+        "%03d.%s" % (y % 1000, file_ext)
     )
 
     return root / os.path.join(*parts)
 
 
 def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    """ MapProxy layout
+    
+        scheme: zz/xxxx/xxxx/yyyy/yyyy.format
+    """
     try: 
-      level = "%02d" % z
-    except TypeError:
-      pass
+      level = "%02d" % int(z)
+    except ValueError:
+      level = z
 
     parts = (
       level,
-      "%04d" % int(x / 10000),
-      "%04d" % (int(x) % 10000),
-      "%04d" % int(y / 10000),
-      "%04d.%s" % (int(y) % 10000, file_ext)
+      "%04d" % (x // 10000),
+      "%04d" % ((x) % 10000),
+      "%04d" % (y // 10000),
+      "%04d.%s" % (y % 10000, file_ext)
     )
 
     return root / os.path.join(*parts)
 
+
 def tile_location_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    """ TMS compatible layout 
+    
+        schema: z/x/y.format
+    """
     return root / os.path.join( str(z), str(x), str(y), file_ext )
 
 
 def tile_location_reverse_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
+    """ Same as TMS but reversed
+
+        schema: x/y/z.format
+    """
     return root / os.path.join( str(y), str(x), str(z), file_ext )
 
 

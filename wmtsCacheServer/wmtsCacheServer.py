@@ -26,13 +26,23 @@ class wmtsCacheServer:
             # Create cache in /tmp/org.qgis.wmts/cache
             rootpathstr = os.path.join(tempfile.gettempdir(),'org.qgis.wmts')
         
-        rootpath = Path(rootpathstr)
-        rootpath.mkdir(mode=0o750, parents=True, exist_ok=True)
+        self.rootpath = Path(rootpathstr)
+        self.rootpath.mkdir(mode=0o750, parents=True, exist_ok=True)
 
         QgsMessageLog.logMessage('Cache directory set to %s' % rootpathstr,'wmtsCache',Qgis.Info)
 
         # Get tile layout
         layout = os.getenv('QGIS_WMTS_CACHE_LAYOUT', 'tc')
 
-        serverIface.registerServerCache( DiskCacheFilter(serverIface, rootpath, layout), 50 )
+        # keep filter ref so that we can return it in tests
+
+        serverIface.registerServerCache( DiskCacheFilter(serverIface, self.rootpath, layout), 50 )
+
+    def create_filter(self, layout=None):
+        """ Create a new filter instance 
+        """
+        return DiskCacheFilter(self.serverIface, self.rootpath, layout or 'tc')
+
+
+
 
