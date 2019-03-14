@@ -9,7 +9,7 @@ echo "Installing required packages..."
 pip3 install -q -U --prefer-binary --user -r tests/requirements.txt
 
 # Disable qDebug stuff that bloats test outputs
-#export QT_LOGGING_RULES="*.debug=false;*.warning=false"
+export QT_LOGGING_RULES="*.debug=false;*.warning=false"
 
 # Disable python hooks/overrides
 export QGIS_DISABLE_MESSAGE_HOOKS=1
