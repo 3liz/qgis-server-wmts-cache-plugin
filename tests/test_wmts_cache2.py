@@ -42,7 +42,7 @@ def test_wmts_document_cache(client):
 
     # Make a request
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
-    rv = client.get(qs,project.fileName())
+    rv = client.get(qs, project.fileName())
     assert rv.status_code == 200
    
     # Test that document cache has been created
@@ -89,7 +89,7 @@ def test_wmts_document_tile(client):
 
     # Make a request
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
-    rv = client.get(qs,project.fileName())
+    rv = client.get(qs, project.fileName())
 
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))

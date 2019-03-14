@@ -128,7 +128,7 @@ class CacheHelper:
         p = self._tile_location(cache_dir / digest, int(x), int(y), z, file_ext)
 
         if create_dir:
-            p.parent.mkdir(mode=0o750, exist_ok=True)
+            p.parent.mkdir(mode=0o750, parents=True, exist_ok=True)
 
         return p
 
@@ -193,11 +193,11 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def setCachedImage(self, img: Union[QByteArray, bytes, bytearray], 
             project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
        
-        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+        if request.parameters().get('SERVICE','').upper() != 'WMTS':
             return False
 
         with trap():
-            p = self._cache.get_tile_cache(project, request, create_dir=True)
+            p = self.get_tile_cache(project, request, create_dir=True)
             with p.open(mode='wb') as f:
                 f.write(img)
                 return True
@@ -205,7 +205,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
 
     def getCachedImage(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> QByteArray:
 
-        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+        if request.parameters().get('SERVICE','').upper() != 'WMTS':
             return QByteArray()
 
         with trap():
@@ -218,7 +218,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
 
     def deleteCachedImage(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
 
-        if request.parameters.get['SERVICE'].upper() != 'WMTS':
+        if request.parameters().get('SERVICE','').upper() != 'WMTS':
             return False
         
         with trap():

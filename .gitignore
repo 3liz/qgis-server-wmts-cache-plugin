@@ -12,3 +12,6 @@ factory.manifest
 
 *~
 
+*-shm
+*-wal
+

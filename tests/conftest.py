@@ -128,7 +128,7 @@ def client(request):
             """
             request  = QgsBufferServerRequest(query, QgsServerRequest.GetMethod, {}, None)
             response = QgsBufferServerResponse()
-            if project is not None:
+            if project is not None and not os.path.isabs(project):
                 projectpath = self.datapath.join(project)
                 qgsproject  = QgsProject()
                 qgsproject.read(projectpath.strpath)
