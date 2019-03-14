@@ -48,6 +48,11 @@ def test_wmts_document_cache(client):
     # Test that document cache has been created
     assert os.path.exists(docpath)
 
+    # Make a second request and check for header
+    rv = client.get(qs, project.fileName())
+    assert rv.status_code == 200
+    assert rv.headers.get('X-Qgis-Cache') == 'wmtsCache'
+
 
 def test_wmts_document_tile(client):
     """  Test WMTS tile response
@@ -99,4 +104,8 @@ def test_wmts_document_tile(client):
     # Test that document cache has been created
     assert os.path.exists(tilepath)
 
+    # Make a second request and check for header
+    rv = client.get(qs, project.fileName())
+    assert rv.status_code == 200
+    assert rv.headers.get('X-Qgis-Cache') == 'wmtsCache'
 

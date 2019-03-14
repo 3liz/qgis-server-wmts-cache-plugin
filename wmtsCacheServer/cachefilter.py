@@ -141,6 +141,11 @@ class DiskCacheFilter(QgsServerCacheFilter):
         self._iface = serverIface
         self._cache = CacheHelper(rootdir, layout)
 
+    def add_response_header(self) -> None:
+        reqhandler = self._iface.requestHandler()
+        if reqhandler:
+            reqhandler.setResponseHeader("X-Qgis-Cache","wmtsCache")
+
     def get_document_cache( self, project: 'QgsProject', request: 'QgsServerRequest' , create_dir=False) -> Path:
         return self._cache.get_document_cache(project.fileName(),request.parameters(),create_dir=create_dir)
 
@@ -161,6 +166,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
                     doc = QDomDocument()
                     statusOK, errorStr, errorLine, errorColumn = doc.setContent(f.read(), True)
                     if statusOK:
+                        self.add_response_header()
                         return doc.toByteArray()
                     else:
                         QgsMessageLog.logMessage(
@@ -212,6 +218,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
             p = self.get_tile_cache(project,request)
             if p.is_file():
                 with p.open('rb') as f:
+                    self.add_response_header()
                     return QByteArray(f.read())
 
         return QByteArray()
