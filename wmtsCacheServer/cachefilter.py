@@ -135,16 +135,24 @@ class CacheHelper:
 
 class DiskCacheFilter(QgsServerCacheFilter):
 
-    def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path, layout: str) -> None:
+    def __init__(self, serverIface: 'QgsServerInterface', rootdir: Path, layout: str,
+                 debug: bool=False) -> None:
         super().__init__(serverIface)
 
         self._iface = serverIface
         self._cache = CacheHelper(rootdir, layout)
+        self._debug  = debug
 
-    def add_response_header(self) -> None:
-        reqhandler = self._iface.requestHandler()
-        if reqhandler:
-            reqhandler.setResponseHeader("X-Qgis-Cache","wmtsCache")
+    def set_debug_headers(self, path: str) -> None:
+        """ Add a response header to tag cached response 
+        """
+        if not self._debug:
+            return
+
+        rh = self._iface.requestHandler()
+        if rh:
+            rh.setResponseHeader("X-Qgis-Debug-Cache-Plugin" ,"wmtsCacheServer")
+            rh.setResponseHeader("X-Qgis-Debug-Cache-Path"   , path.as_posix()) 
 
     def get_document_cache( self, project: 'QgsProject', request: 'QgsServerRequest' , create_dir=False) -> Path:
         return self._cache.get_document_cache(project.fileName(),request.parameters(),create_dir=create_dir)
@@ -166,7 +174,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
                     doc = QDomDocument()
                     statusOK, errorStr, errorLine, errorColumn = doc.setContent(f.read(), True)
                     if statusOK:
-                        self.add_response_header()
+                        self.set_debug_headers(path=p)
                         return doc.toByteArray()
                     else:
                         QgsMessageLog.logMessage(
@@ -218,7 +226,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
             p = self.get_tile_cache(project,request)
             if p.is_file():
                 with p.open('rb') as f:
-                    self.add_response_header()
+                    self.set_debug_headers(path=p)
                     return QByteArray(f.read())
 
         return QByteArray()

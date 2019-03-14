@@ -109,6 +109,9 @@ def client(request):
             self.fontFamily = QgsFontUtils.standardTestFontFamily()
             QgsFontUtils.loadStandardTestFonts(['All'])
 
+            # Activate debug headers
+            os.environ['QGIS_WMTS_CACHE_DEBUG_HEADERS'] = 'true'
+
             self.datapath = request.config.rootdir.join('data')
             self.server = QgsServer()
 

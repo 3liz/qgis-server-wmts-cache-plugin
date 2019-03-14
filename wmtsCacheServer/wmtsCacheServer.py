@@ -34,9 +34,11 @@ class wmtsCacheServer:
         # Get tile layout
         layout = os.getenv('QGIS_WMTS_CACHE_LAYOUT', 'tc')
 
-        # keep filter ref so that we can return it in tests
+        # Debug headers
+        debug_headers = os.getenv('QGIS_WMTS_CACHE_DEBUG_HEADERS', '').lower() in ('1','yes','y','true')
 
-        serverIface.registerServerCache( DiskCacheFilter(serverIface, self.rootpath, layout), 50 )
+        serverIface.registerServerCache( DiskCacheFilter(serverIface, self.rootpath, layout,
+                                         debug=debug_headers), 50 )
 
     def create_filter(self, layout=None):
         """ Create a new filter instance 
