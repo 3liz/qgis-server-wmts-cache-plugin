@@ -134,7 +134,8 @@ def client(request):
             if project is not None and not os.path.isabs(project):
                 projectpath = self.datapath.join(project)
                 qgsproject  = QgsProject()
-                qgsproject.read(projectpath.strpath)
+                if not qgsproject.read(projectpath.strpath):
+                    raise ValueError("Error reading project '%s':" % projectpath.strpath)
             else:
                 qgsproject = None
             self.server.handleRequest(request, response, project=qgsproject)
