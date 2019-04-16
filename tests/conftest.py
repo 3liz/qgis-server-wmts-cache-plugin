@@ -6,7 +6,11 @@ import glob
 import configparser
 import logging
 
+logging.basicConfig( stream=sys.stderr )
+logging.disable(logging.NOTSET)
+
 LOGGER = logging.getLogger('server')
+LOGGER.setLevel(logging.DEBUG)
 
 from typing import Any, Mapping, Dict, Generator
 
@@ -39,10 +43,8 @@ def pytest_sessionstart(session):
     # Define this in global environment
     #os.environ['QGIS_DISABLE_MESSAGE_HOOKS'] = 1
     #os.environ['QGIS_NO_OVERRIDE_IMPORT'] = 1
-
-    logging.disable(logging.INFO)
-
     qgis_application = QgsApplication([], False)
+    qgis_application.initQgis()
 
     # Install logger hook
     install_logger_hook()
@@ -185,17 +187,17 @@ def find_plugins(pluginpath: str) -> Generator[str,None,None]:
             with open(metadatafile, mode='rt') as f:
                 cp.read_file(f)
             if not cp['general'].getboolean('server'):
-                logging.warning("%s is not a server plugin", plugin)
+                logging.critical("%s is not a server plugin", plugin)
                 continue
 
             minver = cp['general'].get('qgisMinimumVersion')
             maxver = cp['general'].get('qgisMaximumVersion')
         except Exception as exc:
-            LOGGER.error("Error reading plugin metadata '%s': %s",metadatafile,exc)
+            LOGGER.critical("Error reading plugin metadata '%s': %s",metadatafile,exc)
             continue
 
         if not checkQgisVersion(minver,maxver):
-            LOGGER.warning(("Unsupported version for %s:"
+            LOGGER.critical(("Unsupported version for %s:"
                 "\n MinimumVersion: %s"
                 "\n MaximumVersion: %s"
                 "\n Qgis version: %s"

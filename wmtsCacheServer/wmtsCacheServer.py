@@ -40,7 +40,7 @@ class wmtsCacheServer:
         serverIface.registerServerCache( DiskCacheFilter(serverIface, self.rootpath, layout,
                                          debug=debug_headers), 50 )
 
-    def create_filter(self, layout=None):
+    def create_filter(self, layout: str=None) -> DiskCacheFilter:
         """ Create a new filter instance 
         """
         return DiskCacheFilter(self.serverIface, self.rootpath, layout or 'tc')
