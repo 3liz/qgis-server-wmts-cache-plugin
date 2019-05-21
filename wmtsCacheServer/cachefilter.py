@@ -170,18 +170,9 @@ class DiskCacheFilter(QgsServerCacheFilter):
         with trap():
             p = self.get_document_cache(project,request)
             if p.is_file():
-                with p.open('r') as f:
-                    doc = QDomDocument()
-                    statusOK, errorStr, errorLine, errorColumn = doc.setContent(f.read(), True)
-                    if statusOK:
-                        self.set_debug_headers(path=p)
-                        return doc.toByteArray()
-                    else:
-                        QgsMessageLog.logMessage(
-                                ("Failed to get document content:"
-                                 "Error at line %d, column %d:\n%s\n"
-                                 "File: %s") % (errorLine, errorColumn, errorStr,p.as_posix())
-                                ,"wmtsCache", Qgis.Critical)
+                with p.open('rb') as f:
+                    self.set_debug_headers(path=p)
+                    return QByteArray(f.read())
 
         return QByteArray()
 

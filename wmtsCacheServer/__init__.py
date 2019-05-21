@@ -5,7 +5,7 @@
 """
 
 def serverClassFactory(serverIface: 'QgsServerInterface') -> 'wmtsCacheServer':
-    """ Load wfsOutputExtensionServer class from file wfsOutputExtension.
+    """ Plugin entry point
     """
     # save reference to the QGIS interface                 
     from .wmtsCacheServer import wmtsCacheServer

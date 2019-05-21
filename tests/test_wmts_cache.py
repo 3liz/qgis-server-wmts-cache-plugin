@@ -48,11 +48,17 @@ def test_wmts_document_cache(client):
     # Test that document cache has been created
     assert os.path.exists(docpath)
 
+    original_content = rv.content
+
     # Make a second request and check for header
     rv = client.get(qs, project.fileName())
     assert rv.status_code == 200
     assert rv.headers.get('X-Qgis-Debug-Cache-Plugin') == 'wmtsCacheServer'
     assert rv.headers.get('X-Qgis-Debug-Cache-Path') == docpath
+
+    cached_content = rv.content
+
+    assert original_content == cached_content
 
 
 def test_wmts_document_tile(client):
@@ -97,6 +103,8 @@ def test_wmts_document_tile(client):
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
     rv = client.get(qs, project.fileName())
 
+    original_content = rv.content
+
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))
 
@@ -110,4 +118,8 @@ def test_wmts_document_tile(client):
     assert rv.status_code == 200
     assert rv.headers.get('X-Qgis-Debug-Cache-Plugin') == 'wmtsCacheServer'
     assert rv.headers.get('X-Qgis-Debug-Cache-Path') == tilepath
+
+    cached_content = rv.content
+
+    assert original_content == cached_content
 

@@ -19,13 +19,13 @@ QGIS_IMAGE=$(REGISTRY_PREFIX)qgis-platform:$(FLAVOR)
 LOCAL_HOME ?= $(shell pwd)
 
 test:
-	mkdir -p $(LOCAL_HOME)/.local $(LOCAL_HOME)/.cache/pip
+	mkdir -p $$(pwd)/.local $(LOCAL_HOME)/.cache
 	docker run --rm --name qgis-py-server-test-$(COMMITID) -w /src \
 		-u $(BECOME_USER) \
-		-v $(shell pwd):/src \
-		-v $(LOCAL_HOME)/.local:/.local \
-		-v $(LOCAL_HOME)/.cache/pip:/.pipcache \
-		-e PIP_CACHE_DIR=/.pipcache \
+		-v $$(pwd):/src \
+		-v $$(pwd)/.local:/.local \
+		-v $(LOCAL_HOME)/.cache:/.cache \
+		-e PIP_CACHE_DIR=/.cache \
 		-e PYTEST_ADDOPTS="$(TEST_OPTS)" \
 		$(QGIS_IMAGE) ./tests/run-tests.sh
 
