@@ -158,7 +158,9 @@ class DiskCacheFilter(QgsServerCacheFilter):
         return self._cache.get_document_cache(project.fileName(),request.parameters(),create_dir=create_dir)
 
     def setCachedDocument(self, doc: QDomDocument, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
-        if not doc:
+        """
+        """
+        if not doc or request.parameters().get('SERVICE','').upper() != 'WMTS' :
             return False
         with trap():
             p = self.get_document_cache(project,request, create_dir=True)
@@ -167,6 +169,11 @@ class DiskCacheFilter(QgsServerCacheFilter):
         return True
 
     def getCachedDocument(self, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> QByteArray:
+        """
+        """
+        if request.parameters().get('SERVICE','').upper() != 'WMTS':
+            return QByteArray()
+
         with trap():
             p = self.get_document_cache(project,request)
             if p.is_file():
