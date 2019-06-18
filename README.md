@@ -1,35 +1,35 @@
 # Cache WMTS
 
-Plugin de cache disque de tuiles pour le service WMTS
+Cache disk Qgis server plugin for WMTS tiles  
 
-## Paramètres d'une tuile WMTS
+## WMTS tile parameters
 
-* LAYER (couche, groupe ou projet complet en fonction de la configuration)
-* TILEMATRIXSET (le CRS)
-* TILEMATRIX (le z en tms)
-* TILEROW (le x en tms)
-* TILE COL (le y en tms)
-* FORMAT (sous la forme `image/*`)
+* LAYER (layer, group or complete project according to project configuration)
+* TILEMATRIXSET (CRS)
+* TILEMATRIX (z as tms)
+* TILEROW (x as tms)
+* TILE COL (y as tms)
+* FORMAT (Image mime type: `image/*`)
 
 see https://georezo.net/wiki/main/standards/wmts
 
-## Configuration du plugin
+## Plugin configuration
 
-Le plugin se configure via les variable d'environment:
+The plugin is configured with environment variables:
 
 ### `QGIS_WMTS_CACHE_ROOTDIR`
 
-Chemin de repertoire de base pour le cache disque.
+Root directory for cached data
 
-Par défaut: *`tempfile.getmpdir()`/org.qgis.wmts/*
+Default to: *`tempfile.getmpdir()`/org.qgis.wmts/*
 
 ### `QGIS_WMTS_CACHE_LAYOUT`
 
-Schema de stockage des tuiles en cache
+Storage layout for tiles
 
-Valeurs possibles: `tc`,`mp`,`tms`,`reverse_tms`
+Possible values: `tc`,`mp`,`tms`,`reverse_tms`
 
-Valeur par défaut: `tc`
+Default value: `tc`
 
 #### Layouts:
 
@@ -37,6 +37,18 @@ Valeur par défaut: `tc`
 - `mp`: MapProxy layout (`zz/xxxx/xxxx/yyyy/yyyy.format`), moins de niveaux de repertoire
 - `tms`: TMS compatible layout (`zz/xxxx/yyyy.format`)
 
-Le layout doit être choisi en fonction de la taille attendue du cache: plus le cache
-doit être gros, plus le layout doit avoir de niveaux de repertoire.
+The layout must be choosen according to the expected size of the cache: more the cache contains
+elements, more the number of directory levels must be important. 
+
+## CLI manager Installation
+
+A cli manager commend may be installed in the python environment using standard setuptools/pip installation.
+
+Once installed, the `wmtscache` cache command can be used to manage the cache content:
+
+- list cache content infos
+- delete project cache content
+- delete specific layer cached tiles  
+ 
+
 
