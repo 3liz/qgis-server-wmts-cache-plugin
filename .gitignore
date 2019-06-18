@@ -10,6 +10,8 @@ __wmts_cache__
 
 factory.manifest
 
+*.egg-info
+
 *~
 
 *-shm

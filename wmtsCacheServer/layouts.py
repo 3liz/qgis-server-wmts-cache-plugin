@@ -45,10 +45,10 @@ def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: st
         "%03d" % ((x) % 1000),
         "%03d" % (y // 1000000),
         "%03d" % ((y // 1000) % 1000),
-        "%03d.%s" % (y % 1000, file_ext)
+        "%03d" % (y % 1000)
     )
 
-    return root / os.path.join(*parts)
+    return (root / os.path.join(*parts)).with_suffix(file_ext)
 
 
 def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
@@ -66,10 +66,10 @@ def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: st
       "%04d" % (x // 10000),
       "%04d" % ((x) % 10000),
       "%04d" % (y // 10000),
-      "%04d.%s" % (y % 10000, file_ext)
+      "%04d" % (y % 10000)
     )
 
-    return root / os.path.join(*parts)
+    return (root / os.path.join(*parts)).with_suffix(file_ext)
 
 
 def tile_location_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
@@ -77,7 +77,7 @@ def tile_location_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: s
     
         schema: z/x/y.format
     """
-    return root / os.path.join( str(z), str(x), str(y), file_ext )
+    return (root / os.path.join( str(z), str(x), str(y))).with_suffix(file_ext)
 
 
 def tile_location_reverse_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
@@ -85,7 +85,7 @@ def tile_location_reverse_tms(root: Path, x: int, y: int, z: Union[int,str], fil
 
         schema: x/y/z.format
     """
-    return root / os.path.join( str(y), str(x), str(z), file_ext )
+    return (root / os.path.join( str(y), str(x), str(z))).with_suffix(file_ext) 
 
 
 layouts = {
