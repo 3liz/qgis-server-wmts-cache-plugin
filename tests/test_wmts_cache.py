@@ -1,12 +1,9 @@
-import sys
 import os
 import logging
 import shutil
 import lxml.etree
 
-from qgis.core import Qgis, QgsProject
-from qgis.server import (QgsBufferServerRequest,
-                         QgsBufferServerResponse)
+from qgis.core import QgsProject
 
 LOGGER = logging.getLogger('server')
 
@@ -34,10 +31,13 @@ def test_wmts_document_cache(client):
     parameters = {
             'MAP': project.fileName(),
             'REQUEST': 'GetCapabilities',
-            'SERVICE': 'WMTS' }
+            'SERVICE': 'WMTS'
+    }
 
     # Get the cached path from the request parameters
-    docpath = cachefilter._cache.get_document_cache(project.fileName(), parameters,'.xml').as_posix()
+    docpath = cachefilter._cache.get_document_cache(
+        project.fileName(), parameters, '.xml'
+    ).as_posix()
 
     assert not os.path.exists(docpath)
 
@@ -91,10 +91,13 @@ def test_wmts_document_cache_time(client):
     parameters = {
             'MAP': project.fileName(),
             'REQUEST': 'GetCapabilities',
-            'SERVICE': 'WMTS' }
+            'SERVICE': 'WMTS'
+    }
 
     # Get the cached path from the request parameters
-    docpath = cachefilter._cache.get_document_cache(project.fileName(), parameters,'.xml').as_posix()
+    docpath = cachefilter._cache.get_document_cache(
+        project.fileName(), parameters, '.xml'
+    ).as_posix()
 
     assert not os.path.exists(docpath)
 
@@ -159,10 +162,13 @@ def test_wmts_document_tile(client):
             "TILEMATRIX": "0",
             "TILEROW": "0",
             "TILECOL": "0",
-            "FORMAT": "image/png" }
+            "FORMAT": "image/png"
+    }
 
     # Get the cached path from the request parameters
-    tilepath = cachefilter._cache.get_tile_cache(project.fileName(),parameters).as_posix()
+    tilepath = cachefilter._cache.get_tile_cache(
+        project.fileName(), parameters
+    ).as_posix()
 
     assert not os.path.exists(tilepath)
 
@@ -189,4 +195,3 @@ def test_wmts_document_tile(client):
     cached_content = rv.content
 
     assert original_content == cached_content
-
