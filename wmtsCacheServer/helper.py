@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from typing import Union, Mapping, TypeVar, Dict
 from hashlib import md5
+from datetime import datetime
 
 from .layouts import layouts
 
@@ -20,7 +21,7 @@ def get_image_sfx(fmt: str) -> str:
     """
     # XXX: We handle only jpeg and png: do we need
     #    to handle anything else ?
- 
+
     if fmt.startswith('image/jpeg'):
         return '.jpg'
     if fmt.startswith('image/png'):
@@ -52,7 +53,7 @@ class CacheHelper:
         m.update(ident.encode())
         return m
 
-    def get_document_cache(self, project: str, params: Dict[str,str], suffix: str='.xml', create_dir: bool=False) -> Path:
+    def get_document_cache(self, project: str, params: Dict[str,str], suffix: str='.xml', create_dir: bool=False, last_modified: datetime=None) -> Path:
         """ Create a cache path for the document
         """
         h = self.get_project_hash(project)
@@ -62,7 +63,7 @@ class CacheHelper:
         # XXX: Take care that that order of items is random !
         qs = "&".join("%s=%s" % (k,params[k]) for k in sorted(params.keys())).encode()
         h.update(qs)
-        
+
         digest = h.hexdigest()
 
         # Create subdirs by taking the first letter of the digest
@@ -72,7 +73,14 @@ class CacheHelper:
             if not inf.exists():
                 inf.write_text(project)
 
-        return (p / digest).with_suffix(suffix)
+        doc_path = (p / digest).with_suffix(suffix)
+
+        if doc_path.is_file() and isinstance(last_modified, datetime):
+            doc_datetime = datetime.fromtimestamp(doc_path.stat().st_mtime)
+            if last_modified > doc_datetime:
+                doc_path.unlink()
+
+        return doc_path
 
     def get_documents_root(self, project: str) -> Path:
         """ Return base path for documents
