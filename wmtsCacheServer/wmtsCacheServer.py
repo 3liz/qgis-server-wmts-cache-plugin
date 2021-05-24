@@ -13,6 +13,7 @@ from qgis.core import Qgis, QgsMessageLog
 from qgis.server import QgsServerInterface
 
 from .cachefilter import DiskCacheFilter
+from .cachemngrapi import CacheMngrApi
 
 
 class wmtsCacheServer:
@@ -42,6 +43,10 @@ class wmtsCacheServer:
 
         serverIface.registerServerCache( DiskCacheFilter(serverIface, self.rootpath, layout,
                                          debug=debug_headers), 50 )
+
+        # Cache Manager API
+        api = CacheMngrApi(serverIface, self.rootpath)
+        serverIface.serviceRegistry().registerApi(api)
 
     def create_filter(self, layout: str=None) -> DiskCacheFilter:
         """ Create a new filter instance
