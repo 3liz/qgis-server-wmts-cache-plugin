@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" version="3.6.0-Noosa">
+<qgis projectname="" version="3.10.14-A Coruña">
   <homePath path=""/>
   <title></title>
   <autotransaction active="0"/>
@@ -7,6 +7,7 @@
   <trust active="0"/>
   <projectCrs>
     <spatialrefsys>
+      <wkt>GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]</wkt>
       <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
       <srsid>3452</srsid>
       <srid>4326</srid>
@@ -19,20 +20,20 @@
   </projectCrs>
   <layer-tree-group>
     <customproperties/>
-    <layer-tree-layer expanded="1" id="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29" name="france_parts" checked="Qt::Checked" providerKey="ogr" source="./france_parts/france_parts.shp">
+    <layer-tree-layer checked="Qt::Checked" id="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29" name="france_parts" source="./france_parts/france_parts.shp" legend_exp="" providerKey="ogr" expanded="1">
       <customproperties/>
     </layer-tree-layer>
     <custom-order enabled="0">
       <item>france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29</item>
     </custom-order>
   </layer-tree-group>
-  <snapping-settings mode="2" unit="2" type="1" intersection-snapping="0" tolerance="0" enabled="0">
+  <snapping-settings intersection-snapping="0" unit="2" type="1" mode="2" enabled="0" tolerance="0">
     <individual-layer-settings>
-      <layer-setting id="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29" type="1" units="2" tolerance="0" enabled="1"/>
+      <layer-setting id="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29" type="1" units="2" enabled="1" tolerance="0"/>
     </individual-layer-settings>
   </snapping-settings>
   <relations/>
-  <mapcanvas annotationsVisible="1" name="theMapCanvas">
+  <mapcanvas name="theMapCanvas" annotationsVisible="1">
     <units>degrees</units>
     <extent>
       <xmin>-5.33889081436202328</xmin>
@@ -43,6 +44,7 @@
     <rotation>0</rotation>
     <destinationsrs>
       <spatialrefsys>
+        <wkt>GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]</wkt>
         <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
         <srsid>3452</srsid>
         <srid>4326</srid>
@@ -58,15 +60,15 @@
   </mapcanvas>
   <projectModels/>
   <legend updateDrawingOrder="true">
-    <legendlayer open="true" showFeatureCount="0" drawingOrder="-1" checked="Qt::Checked" name="france_parts">
+    <legendlayer open="true" checked="Qt::Checked" drawingOrder="-1" name="france_parts" showFeatureCount="0">
       <filegroup open="true" hidden="false">
-        <legendlayerfile layerid="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29" visible="1" isInOverview="0"/>
+        <legendlayerfile layerid="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29" isInOverview="0" visible="1"/>
       </filegroup>
     </legendlayer>
   </legend>
   <mapViewDocks/>
   <projectlayers>
-    <maplayer autoRefreshEnabled="0" minScale="1e+8" simplifyLocal="1" readOnly="0" autoRefreshTime="0" geometry="Polygon" maxScale="0" simplifyDrawingHints="1" type="vector" simplifyDrawingTol="1" refreshOnNotifyMessage="" styleCategories="AllStyleCategories" refreshOnNotifyEnabled="0" simplifyAlgorithm="0" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" labelsEnabled="1">
+    <maplayer simplifyDrawingTol="1" type="vector" wkbType="MultiPolygon" autoRefreshTime="0" geometry="Polygon" maxScale="0" refreshOnNotifyEnabled="0" readOnly="0" hasScaleBasedVisibilityFlag="0" simplifyDrawingHints="1" styleCategories="AllStyleCategories" simplifyLocal="1" simplifyAlgorithm="0" labelsEnabled="1" autoRefreshEnabled="0" refreshOnNotifyMessage="" minScale="1e+8" simplifyMaxScale="1">
       <extent>
         <xmin>-5.1326269186972695</xmin>
         <ymin>46.2791909857754149</ymin>
@@ -81,6 +83,7 @@
       <layername>france_parts</layername>
       <srs>
         <spatialrefsys>
+          <wkt>GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]</wkt>
           <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
           <srsid>3452</srsid>
           <srid>4326</srid>
@@ -103,6 +106,7 @@
         <encoding></encoding>
         <crs>
           <spatialrefsys>
+            <wkt></wkt>
             <proj4></proj4>
             <srsid>0</srsid>
             <srid>0</srid>
@@ -110,7 +114,7 @@
             <description></description>
             <projectionacronym></projectionacronym>
             <ellipsoidacronym></ellipsoidacronym>
-            <geographicflag>false</geographicflag>
+            <geographicflag>true</geographicflag>
           </spatialrefsys>
         </crs>
         <extent/>
@@ -130,10 +134,10 @@
         <Removable>1</Removable>
         <Searchable>1</Searchable>
       </flags>
-      <renderer-v2 type="singleSymbol" symbollevels="0" forceraster="0" enableorderby="0">
+      <renderer-v2 enableorderby="0" type="singleSymbol" forceraster="0" symbollevels="0">
         <symbols>
-          <symbol clip_to_extent="1" type="fill" force_rhr="0" name="0" alpha="1">
-            <layer locked="0" class="SimpleFill" pass="0" enabled="1">
+          <symbol clip_to_extent="1" type="fill" name="0" force_rhr="0" alpha="1">
+            <layer class="SimpleFill" enabled="1" pass="0" locked="0">
               <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
               <prop v="140,130,77,255" k="color"/>
               <prop v="bevel" k="joinstyle"/>
@@ -147,9 +151,9 @@
               <prop v="solid" k="style"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option type="QString" value="" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option type="QString" value="collection" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -162,7 +166,7 @@
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerOpacity>1</layerOpacity>
-      <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
+      <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
         <activeChecks/>
         <checkConfiguration/>
       </geometryOptions>
@@ -477,136 +481,137 @@
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
       <defaults>
-        <default field="OBJECTID" expression="" applyOnUpdate="0"/>
-        <default field="VertexCou" expression="" applyOnUpdate="0"/>
-        <default field="ISO" expression="" applyOnUpdate="0"/>
-        <default field="NAME_0" expression="" applyOnUpdate="0"/>
-        <default field="NAME_1" expression="" applyOnUpdate="0"/>
-        <default field="VARNAME_1" expression="" applyOnUpdate="0"/>
-        <default field="NL_NAME_1" expression="" applyOnUpdate="0"/>
-        <default field="HASC_1" expression="" applyOnUpdate="0"/>
-        <default field="TYPE_1" expression="" applyOnUpdate="0"/>
-        <default field="ENGTYPE_1" expression="" applyOnUpdate="0"/>
-        <default field="VALIDFR_1" expression="" applyOnUpdate="0"/>
-        <default field="VALIDTO_1" expression="" applyOnUpdate="0"/>
-        <default field="REMARKS_1" expression="" applyOnUpdate="0"/>
-        <default field="Region" expression="" applyOnUpdate="0"/>
-        <default field="RegionVar" expression="" applyOnUpdate="0"/>
-        <default field="ProvNumber" expression="" applyOnUpdate="0"/>
-        <default field="NEV_Countr" expression="" applyOnUpdate="0"/>
-        <default field="FIRST_FIPS" expression="" applyOnUpdate="0"/>
-        <default field="FIRST_HASC" expression="" applyOnUpdate="0"/>
-        <default field="FIPS_1" expression="" applyOnUpdate="0"/>
-        <default field="gadm_level" expression="" applyOnUpdate="0"/>
-        <default field="CheckMe" expression="" applyOnUpdate="0"/>
-        <default field="Region_Cod" expression="" applyOnUpdate="0"/>
-        <default field="Region_C_1" expression="" applyOnUpdate="0"/>
-        <default field="ScaleRank" expression="" applyOnUpdate="0"/>
-        <default field="Region_C_2" expression="" applyOnUpdate="0"/>
-        <default field="Region_C_3" expression="" applyOnUpdate="0"/>
-        <default field="Country_Pr" expression="" applyOnUpdate="0"/>
-        <default field="DataRank" expression="" applyOnUpdate="0"/>
-        <default field="Abbrev" expression="" applyOnUpdate="0"/>
-        <default field="Postal" expression="" applyOnUpdate="0"/>
-        <default field="Area_sqkm" expression="" applyOnUpdate="0"/>
-        <default field="sameAsCity" expression="" applyOnUpdate="0"/>
-        <default field="ADM0_A3" expression="" applyOnUpdate="0"/>
-        <default field="MAP_COLOR" expression="" applyOnUpdate="0"/>
-        <default field="LabelRank" expression="" applyOnUpdate="0"/>
-        <default field="Shape_Leng" expression="" applyOnUpdate="0"/>
-        <default field="Shape_Area" expression="" applyOnUpdate="0"/>
+        <default expression="" field="OBJECTID" applyOnUpdate="0"/>
+        <default expression="" field="VertexCou" applyOnUpdate="0"/>
+        <default expression="" field="ISO" applyOnUpdate="0"/>
+        <default expression="" field="NAME_0" applyOnUpdate="0"/>
+        <default expression="" field="NAME_1" applyOnUpdate="0"/>
+        <default expression="" field="VARNAME_1" applyOnUpdate="0"/>
+        <default expression="" field="NL_NAME_1" applyOnUpdate="0"/>
+        <default expression="" field="HASC_1" applyOnUpdate="0"/>
+        <default expression="" field="TYPE_1" applyOnUpdate="0"/>
+        <default expression="" field="ENGTYPE_1" applyOnUpdate="0"/>
+        <default expression="" field="VALIDFR_1" applyOnUpdate="0"/>
+        <default expression="" field="VALIDTO_1" applyOnUpdate="0"/>
+        <default expression="" field="REMARKS_1" applyOnUpdate="0"/>
+        <default expression="" field="Region" applyOnUpdate="0"/>
+        <default expression="" field="RegionVar" applyOnUpdate="0"/>
+        <default expression="" field="ProvNumber" applyOnUpdate="0"/>
+        <default expression="" field="NEV_Countr" applyOnUpdate="0"/>
+        <default expression="" field="FIRST_FIPS" applyOnUpdate="0"/>
+        <default expression="" field="FIRST_HASC" applyOnUpdate="0"/>
+        <default expression="" field="FIPS_1" applyOnUpdate="0"/>
+        <default expression="" field="gadm_level" applyOnUpdate="0"/>
+        <default expression="" field="CheckMe" applyOnUpdate="0"/>
+        <default expression="" field="Region_Cod" applyOnUpdate="0"/>
+        <default expression="" field="Region_C_1" applyOnUpdate="0"/>
+        <default expression="" field="ScaleRank" applyOnUpdate="0"/>
+        <default expression="" field="Region_C_2" applyOnUpdate="0"/>
+        <default expression="" field="Region_C_3" applyOnUpdate="0"/>
+        <default expression="" field="Country_Pr" applyOnUpdate="0"/>
+        <default expression="" field="DataRank" applyOnUpdate="0"/>
+        <default expression="" field="Abbrev" applyOnUpdate="0"/>
+        <default expression="" field="Postal" applyOnUpdate="0"/>
+        <default expression="" field="Area_sqkm" applyOnUpdate="0"/>
+        <default expression="" field="sameAsCity" applyOnUpdate="0"/>
+        <default expression="" field="ADM0_A3" applyOnUpdate="0"/>
+        <default expression="" field="MAP_COLOR" applyOnUpdate="0"/>
+        <default expression="" field="LabelRank" applyOnUpdate="0"/>
+        <default expression="" field="Shape_Leng" applyOnUpdate="0"/>
+        <default expression="" field="Shape_Area" applyOnUpdate="0"/>
       </defaults>
       <constraints>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="OBJECTID"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="VertexCou"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="ISO"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="NAME_0"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="NAME_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="VARNAME_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="NL_NAME_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="HASC_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="TYPE_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="ENGTYPE_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="VALIDFR_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="VALIDTO_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="REMARKS_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Region"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="RegionVar"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="ProvNumber"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="NEV_Countr"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="FIRST_FIPS"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="FIRST_HASC"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="FIPS_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="gadm_level"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="CheckMe"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Region_Cod"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Region_C_1"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="ScaleRank"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Region_C_2"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Region_C_3"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Country_Pr"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="DataRank"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Abbrev"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Postal"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Area_sqkm"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="sameAsCity"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="ADM0_A3"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="MAP_COLOR"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="LabelRank"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Shape_Leng"/>
-        <constraint unique_strength="0" notnull_strength="0" exp_strength="0" constraints="0" field="Shape_Area"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="OBJECTID"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="VertexCou"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="ISO"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="NAME_0"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="NAME_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="VARNAME_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="NL_NAME_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="HASC_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="TYPE_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="ENGTYPE_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="VALIDFR_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="VALIDTO_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="REMARKS_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Region"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="RegionVar"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="ProvNumber"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="NEV_Countr"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="FIRST_FIPS"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="FIRST_HASC"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="FIPS_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="gadm_level"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="CheckMe"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Region_Cod"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Region_C_1"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="ScaleRank"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Region_C_2"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Region_C_3"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Country_Pr"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="DataRank"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Abbrev"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Postal"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Area_sqkm"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="sameAsCity"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="ADM0_A3"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="MAP_COLOR"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="LabelRank"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Shape_Leng"/>
+        <constraint constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0" field="Shape_Area"/>
       </constraints>
       <constraintExpressions>
-        <constraint desc="" field="OBJECTID" exp=""/>
-        <constraint desc="" field="VertexCou" exp=""/>
-        <constraint desc="" field="ISO" exp=""/>
-        <constraint desc="" field="NAME_0" exp=""/>
-        <constraint desc="" field="NAME_1" exp=""/>
-        <constraint desc="" field="VARNAME_1" exp=""/>
-        <constraint desc="" field="NL_NAME_1" exp=""/>
-        <constraint desc="" field="HASC_1" exp=""/>
-        <constraint desc="" field="TYPE_1" exp=""/>
-        <constraint desc="" field="ENGTYPE_1" exp=""/>
-        <constraint desc="" field="VALIDFR_1" exp=""/>
-        <constraint desc="" field="VALIDTO_1" exp=""/>
-        <constraint desc="" field="REMARKS_1" exp=""/>
-        <constraint desc="" field="Region" exp=""/>
-        <constraint desc="" field="RegionVar" exp=""/>
-        <constraint desc="" field="ProvNumber" exp=""/>
-        <constraint desc="" field="NEV_Countr" exp=""/>
-        <constraint desc="" field="FIRST_FIPS" exp=""/>
-        <constraint desc="" field="FIRST_HASC" exp=""/>
-        <constraint desc="" field="FIPS_1" exp=""/>
-        <constraint desc="" field="gadm_level" exp=""/>
-        <constraint desc="" field="CheckMe" exp=""/>
-        <constraint desc="" field="Region_Cod" exp=""/>
-        <constraint desc="" field="Region_C_1" exp=""/>
-        <constraint desc="" field="ScaleRank" exp=""/>
-        <constraint desc="" field="Region_C_2" exp=""/>
-        <constraint desc="" field="Region_C_3" exp=""/>
-        <constraint desc="" field="Country_Pr" exp=""/>
-        <constraint desc="" field="DataRank" exp=""/>
-        <constraint desc="" field="Abbrev" exp=""/>
-        <constraint desc="" field="Postal" exp=""/>
-        <constraint desc="" field="Area_sqkm" exp=""/>
-        <constraint desc="" field="sameAsCity" exp=""/>
-        <constraint desc="" field="ADM0_A3" exp=""/>
-        <constraint desc="" field="MAP_COLOR" exp=""/>
-        <constraint desc="" field="LabelRank" exp=""/>
-        <constraint desc="" field="Shape_Leng" exp=""/>
-        <constraint desc="" field="Shape_Area" exp=""/>
+        <constraint field="OBJECTID" exp="" desc=""/>
+        <constraint field="VertexCou" exp="" desc=""/>
+        <constraint field="ISO" exp="" desc=""/>
+        <constraint field="NAME_0" exp="" desc=""/>
+        <constraint field="NAME_1" exp="" desc=""/>
+        <constraint field="VARNAME_1" exp="" desc=""/>
+        <constraint field="NL_NAME_1" exp="" desc=""/>
+        <constraint field="HASC_1" exp="" desc=""/>
+        <constraint field="TYPE_1" exp="" desc=""/>
+        <constraint field="ENGTYPE_1" exp="" desc=""/>
+        <constraint field="VALIDFR_1" exp="" desc=""/>
+        <constraint field="VALIDTO_1" exp="" desc=""/>
+        <constraint field="REMARKS_1" exp="" desc=""/>
+        <constraint field="Region" exp="" desc=""/>
+        <constraint field="RegionVar" exp="" desc=""/>
+        <constraint field="ProvNumber" exp="" desc=""/>
+        <constraint field="NEV_Countr" exp="" desc=""/>
+        <constraint field="FIRST_FIPS" exp="" desc=""/>
+        <constraint field="FIRST_HASC" exp="" desc=""/>
+        <constraint field="FIPS_1" exp="" desc=""/>
+        <constraint field="gadm_level" exp="" desc=""/>
+        <constraint field="CheckMe" exp="" desc=""/>
+        <constraint field="Region_Cod" exp="" desc=""/>
+        <constraint field="Region_C_1" exp="" desc=""/>
+        <constraint field="ScaleRank" exp="" desc=""/>
+        <constraint field="Region_C_2" exp="" desc=""/>
+        <constraint field="Region_C_3" exp="" desc=""/>
+        <constraint field="Country_Pr" exp="" desc=""/>
+        <constraint field="DataRank" exp="" desc=""/>
+        <constraint field="Abbrev" exp="" desc=""/>
+        <constraint field="Postal" exp="" desc=""/>
+        <constraint field="Area_sqkm" exp="" desc=""/>
+        <constraint field="sameAsCity" exp="" desc=""/>
+        <constraint field="ADM0_A3" exp="" desc=""/>
+        <constraint field="MAP_COLOR" exp="" desc=""/>
+        <constraint field="LabelRank" exp="" desc=""/>
+        <constraint field="Shape_Leng" exp="" desc=""/>
+        <constraint field="Shape_Area" exp="" desc=""/>
       </constraintExpressions>
       <expressionfields/>
       <attributeactions>
-        <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
+        <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
       </attributeactions>
-      <attributetableconfig sortOrder="0" sortExpression="" actionWidgetStyle="dropDown">
+      <attributetableconfig actionWidgetStyle="dropDown" sortOrder="0" sortExpression="">
         <columns/>
       </attributetableconfig>
       <conditionalstyles>
         <rowstyles/>
         <fieldstyles/>
       </conditionalstyles>
+      <storedexpressions/>
       <editform tolerant="1"></editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
@@ -625,117 +630,128 @@
     <layer id="france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29"/>
   </layerorder>
   <properties>
-    <WMSAddWktGeometry type="bool">false</WMSAddWktGeometry>
     <DefaultStyles>
       <ColorRamp type="QString"></ColorRamp>
-      <RandomColors type="bool">true</RandomColors>
-      <Opacity type="double">1</Opacity>
-      <Line type="QString"></Line>
       <Fill type="QString"></Fill>
+      <Line type="QString"></Line>
       <Marker type="QString"></Marker>
+      <Opacity type="double">1</Opacity>
+      <RandomColors type="bool">true</RandomColors>
     </DefaultStyles>
-    <Paths>
-      <Absolute type="bool">false</Absolute>
-    </Paths>
-    <WMSFees type="QString">conditions unknown</WMSFees>
     <Gui>
+      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
+      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
       <CanvasColorRedPart type="int">255</CanvasColorRedPart>
       <SelectionColorAlphaPart type="int">255</SelectionColorAlphaPart>
-      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
       <SelectionColorBluePart type="int">0</SelectionColorBluePart>
-      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
       <SelectionColorGreenPart type="int">255</SelectionColorGreenPart>
       <SelectionColorRedPart type="int">255</SelectionColorRedPart>
     </Gui>
-    <SpatialRefSys>
-      <ProjectCRSID type="int">3452</ProjectCRSID>
-      <ProjectCrs type="QString">EPSG:4326</ProjectCrs>
-      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
-      <ProjectCRSProj4String type="QString">+proj=longlat +datum=WGS84 +no_defs</ProjectCRSProj4String>
-    </SpatialRefSys>
-    <WCSLayers type="QStringList"/>
-    <WMSRootName type="QString"></WMSRootName>
-    <WFSTLayers>
-      <Delete type="QStringList"/>
-      <Update type="QStringList"/>
-      <Insert type="QStringList"/>
-    </WFSTLayers>
+    <Legend>
+      <filterByMap type="bool">false</filterByMap>
+    </Legend>
+    <Macros>
+      <pythonCode type="QString"></pythonCode>
+    </Macros>
     <Measure>
       <Ellipsoid type="QString">NONE</Ellipsoid>
     </Measure>
-    <WMSSegmentizeFeatureInfoGeometry type="bool">false</WMSSegmentizeFeatureInfoGeometry>
-    <WMSPrecision type="QString">8</WMSPrecision>
-    <WMTSJpegLayers>
-      <Layer type="QStringList"/>
-      <Project type="bool">false</Project>
-      <Group type="QStringList"/>
-    </WMTSJpegLayers>
-    <WFSUrl type="QString"></WFSUrl>
     <Measurement>
-      <DistanceUnits type="QString">meters</DistanceUnits>
       <AreaUnits type="QString">m2</AreaUnits>
+      <DistanceUnits type="QString">meters</DistanceUnits>
     </Measurement>
-    <WMSOnlineResource type="QString"></WMSOnlineResource>
     <PAL>
-      <ShowingPartialsLabels type="bool">true</ShowingPartialsLabels>
-      <CandidatesPolygon type="int">30</CandidatesPolygon>
-      <ShowingCandidates type="bool">false</ShowingCandidates>
       <CandidatesLine type="int">50</CandidatesLine>
-      <DrawRectOnly type="bool">false</DrawRectOnly>
-      <TextFormat type="int">0</TextFormat>
-      <ShowingAllLabels type="bool">false</ShowingAllLabels>
-      <SearchMethod type="int">0</SearchMethod>
       <CandidatesPoint type="int">16</CandidatesPoint>
+      <CandidatesPolygon type="int">30</CandidatesPolygon>
+      <DrawRectOnly type="bool">false</DrawRectOnly>
+      <DrawUnplaced type="bool">false</DrawUnplaced>
+      <SearchMethod type="int">0</SearchMethod>
+      <ShowingAllLabels type="bool">false</ShowingAllLabels>
+      <ShowingCandidates type="bool">false</ShowingCandidates>
+      <ShowingPartialsLabels type="bool">true</ShowingPartialsLabels>
+      <TextFormat type="int">0</TextFormat>
+      <UnplacedColor type="QString">255,0,0,255</UnplacedColor>
     </PAL>
-    <WMSContactPerson type="QString"></WMSContactPerson>
-    <WMSImageQuality type="int">90</WMSImageQuality>
-    <WMSServiceCapabilities type="bool">false</WMSServiceCapabilities>
-    <WMSMaxAtlasFeatures type="int">1</WMSMaxAtlasFeatures>
-    <WMTSUrl type="QString"></WMTSUrl>
-    <WMSServiceTitle type="QString"></WMSServiceTitle>
-    <WMSContactOrganization type="QString"></WMSContactOrganization>
-    <WMSUrl type="QString"></WMSUrl>
-    <WMSServiceAbstract type="QString"></WMSServiceAbstract>
+    <Paths>
+      <Absolute type="bool">false</Absolute>
+    </Paths>
     <PositionPrecision>
       <Automatic type="bool">true</Automatic>
       <DecimalPlaces type="int">2</DecimalPlaces>
       <DegreeFormat type="QString">MU</DegreeFormat>
     </PositionPrecision>
+    <SpatialRefSys>
+      <ProjectCRSID type="int">3452</ProjectCRSID>
+      <ProjectCRSProj4String type="QString">+proj=longlat +datum=WGS84 +no_defs</ProjectCRSProj4String>
+      <ProjectCrs type="QString">EPSG:4326</ProjectCrs>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
+    </SpatialRefSys>
+    <WCSLayers type="QStringList"/>
+    <WCSUrl type="QString"></WCSUrl>
+    <WFSLayers type="QStringList"/>
+    <WFSTLayers>
+      <Delete type="QStringList"/>
+      <Insert type="QStringList"/>
+      <Update type="QStringList"/>
+    </WFSTLayers>
+    <WFSUrl type="QString"></WFSUrl>
     <WMSAccessConstraints type="QString">None</WMSAccessConstraints>
+    <WMSAddWktGeometry type="bool">false</WMSAddWktGeometry>
+    <WMSContactMail type="QString"></WMSContactMail>
+    <WMSContactOrganization type="QString"></WMSContactOrganization>
+    <WMSContactPerson type="QString"></WMSContactPerson>
+    <WMSContactPhone type="QString"></WMSContactPhone>
+    <WMSContactPosition type="QString"></WMSContactPosition>
+    <WMSCrsList type="QStringList">
+      <value>EPSG:4326</value>
+    </WMSCrsList>
+    <WMSDefaultMapUnitsPerMm type="double">1</WMSDefaultMapUnitsPerMm>
+    <WMSFees type="QString">conditions unknown</WMSFees>
+    <WMSImageQuality type="int">90</WMSImageQuality>
     <WMSKeywordList type="QStringList">
       <value></value>
     </WMSKeywordList>
-    <WMTSPngLayers>
-      <Layer type="QStringList">
-        <value>france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29</value>
-      </Layer>
-      <Project type="bool">true</Project>
-      <Group type="QStringList"/>
-    </WMTSPngLayers>
-    <WMSContactPosition type="QString"></WMSContactPosition>
-    <WMTSGrids>
-      <Config type="QStringList"/>
-      <CRS type="QStringList"/>
-    </WMTSGrids>
-    <WMTSLayers>
-      <Layer type="QStringList">
-        <value>france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29</value>
-      </Layer>
-      <Project type="bool">true</Project>
-      <Group type="QStringList"/>
-    </WMTSLayers>
-    <Macros>
-      <pythonCode type="QString"></pythonCode>
-    </Macros>
-    <WFSLayers type="QStringList"/>
-    <WMSContactMail type="QString"></WMSContactMail>
-    <WMTSMinScale type="int">5000</WMTSMinScale>
-    <WCSUrl type="QString"></WCSUrl>
+    <WMSMaxAtlasFeatures type="int">1</WMSMaxAtlasFeatures>
+    <WMSOnlineResource type="QString"></WMSOnlineResource>
+    <WMSPrecision type="QString">8</WMSPrecision>
+    <WMSRootName type="QString"></WMSRootName>
+    <WMSSegmentizeFeatureInfoGeometry type="bool">false</WMSSegmentizeFeatureInfoGeometry>
+    <WMSServiceAbstract type="QString"></WMSServiceAbstract>
+    <WMSServiceCapabilities type="bool">false</WMSServiceCapabilities>
+    <WMSServiceTitle type="QString"></WMSServiceTitle>
+    <WMSTileBuffer type="int">0</WMSTileBuffer>
+    <WMSUrl type="QString"></WMSUrl>
     <WMSUseLayerIDs type="bool">false</WMSUseLayerIDs>
-    <Legend>
-      <filterByMap type="bool">false</filterByMap>
-    </Legend>
-    <WMSContactPhone type="QString"></WMSContactPhone>
+    <WMTSGrids>
+      <CRS type="QStringList">
+        <value>EPSG:4326</value>
+      </CRS>
+      <Config type="QStringList">
+        <value>EPSG:4326,90,-180,279541132.0143589,18</value>
+      </Config>
+    </WMTSGrids>
+    <WMTSJpegLayers>
+      <Group type="QStringList"/>
+      <Layer type="QStringList"/>
+      <Project type="bool">false</Project>
+    </WMTSJpegLayers>
+    <WMTSLayers>
+      <Group type="QStringList"/>
+      <Layer type="QStringList">
+        <value>france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29</value>
+      </Layer>
+      <Project type="bool">true</Project>
+    </WMTSLayers>
+    <WMTSMinScale type="int">5000</WMTSMinScale>
+    <WMTSPngLayers>
+      <Group type="QStringList"/>
+      <Layer type="QStringList">
+        <value>france_parts_8d8d649f_7748_43cc_8bde_b013e17ede29</value>
+      </Layer>
+      <Project type="bool">true</Project>
+    </WMTSPngLayers>
+    <WMTSUrl type="QString"></WMTSUrl>
   </properties>
   <visibility-presets/>
   <transformContext/>
@@ -761,4 +777,8 @@
   </projectMetadata>
   <Annotations/>
   <Layouts/>
+  <Bookmarks/>
+  <ProjectViewSettings UseProjectScales="0">
+    <Scales/>
+  </ProjectViewSettings>
 </qgis>
