@@ -18,6 +18,7 @@ from typing import Union, Mapping, TypeVar, Dict
 from contextlib import contextmanager
 from hashlib import md5
 from shutil import rmtree
+from datetime import datetime
 
 from .layouts import layouts
 from .helper import CacheHelper
@@ -47,7 +48,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
         self._debug  = debug
 
     def set_debug_headers(self, path: str) -> None:
-        """ Add a response header to tag cached response 
+        """ Add a response header to tag cached response
         """
         if not self._debug:
             return
@@ -55,12 +56,16 @@ class DiskCacheFilter(QgsServerCacheFilter):
         rh = self._iface.requestHandler()
         if rh:
             rh.setResponseHeader("X-Qgis-Debug-Cache-Plugin" ,"wmtsCacheServer")
-            rh.setResponseHeader("X-Qgis-Debug-Cache-Path"   , path.as_posix()) 
+            rh.setResponseHeader("X-Qgis-Debug-Cache-Path"   , path.as_posix())
 
     def get_document_cache( self, project: 'QgsProject', request: 'QgsServerRequest' , create_dir=False) -> Path:
         """ Return cache location for document
         """
-        return self._cache.get_document_cache(project.fileName(),request.parameters(),create_dir=create_dir)
+        last_modified = datetime.fromtimestamp(project.lastModified().toMSecsSinceEpoch() / 1000.0)
+        return self._cache.get_document_cache(
+            project.fileName(), request.parameters(),
+            create_dir=create_dir, last_modified=last_modified
+        )
 
     def setCachedDocument(self, doc: QDomDocument, project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         """ Override QgsServerCacheFilter::setCachedDocument
@@ -113,7 +118,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
     def get_tile_cache(self, project: 'QgsProject', request: 'QgsServerRequest' , create_dir=False) -> Path:
         return self._cache.get_tile_cache(project.fileName(),request.parameters(),create_dir=create_dir)
 
-    def setCachedImage(self, img: Union[QByteArray, bytes, bytearray], 
+    def setCachedImage(self, img: Union[QByteArray, bytes, bytearray],
             project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         """ Override QgsServerCacheFilter::setCachedImage
         """
