@@ -1,6 +1,6 @@
 # Cache WMTS
 
-Cache disk Qgis server plugin for WMTS tiles  
+Cache disk QGIS server plugin for WMTS tiles  
 
 ## WMTS tile parameters
 
@@ -11,7 +11,7 @@ Cache disk Qgis server plugin for WMTS tiles
 * TILE COL (y as tms)
 * FORMAT (Image mime type: `image/*`)
 
-see https://georezo.net/wiki/main/standards/wmts
+See https://georezo.net/wiki/main/standards/wmts
 
 ## Plugin configuration
 
@@ -31,24 +31,21 @@ Possible values: `tc`,`mp`,`tms`,`reverse_tms`
 
 Default value: `tc`
 
-#### Layouts:
+### Layouts
 
 - `tc`: TileCache compatible layout, (`zz/xxx/xxx/xxx/yyy/yyy/yyy.format`)
 - `mp`: MapProxy layout (`zz/xxxx/xxxx/yyyy/yyyy.format`), moins de niveaux de repertoire
 - `tms`: TMS compatible layout (`zz/xxxx/yyyy.format`)
 
-The layout must be choosen according to the expected size of the cache: more the cache contains
+The layout must be chosen according to the expected size of the cache: more the cache contains
 elements, more the number of directory levels must be important. 
 
 ## CLI manager Installation
 
-A cli manager commend may be installed in the python environment using standard setuptools/pip installation.
+A cli manager command may be installed in the python environment using standard setuptools/pip installation.
 
 Once installed, the `wmtscache` cache command can be used to manage the cache content:
 
 - list cache content infos
 - delete project cache content
 - delete specific layer cached tiles  
- 
-
-
