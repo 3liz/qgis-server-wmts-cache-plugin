@@ -1,14 +1,12 @@
-import sys
-import os
-import logging
 import json
-import lxml.etree
+import logging
+import os
 
 from shutil import rmtree
 
-from qgis.core import Qgis, QgsProject
-from qgis.server import (QgsBufferServerRequest,
-                         QgsBufferServerResponse)
+import lxml.etree
+
+from qgis.core import QgsProject
 
 LOGGER = logging.getLogger('server')
 
@@ -125,7 +123,7 @@ def test_wmts_cachemngrapi_cache_info(client):
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
     rv = client.get(qs, project.fileName())
 
-    original_content = rv.content
+    # original_content = rv.content
 
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))
@@ -369,7 +367,7 @@ def test_wmts_cachemngrapi_delete_layer(client):
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
     rv = client.get(qs, project.fileName())
 
-    original_content = rv.content
+    # original_content = rv.content
 
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))
@@ -491,7 +489,7 @@ def test_wmts_cachemngrapi_delete_layers(client):
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
     rv = client.get(qs, project.fileName())
 
-    original_content = rv.content
+    # original_content = rv.content
 
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))
@@ -623,7 +621,7 @@ def test_wmts_cachemngrapi_delete_collection(client):
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
     rv = client.get(qs, project.fileName())
 
-    original_content = rv.content
+    # original_content = rv.content
 
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))
@@ -759,7 +757,7 @@ def test_wmts_cachemngrapi_layerid_error(client):
     qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
     rv = client.get(qs, project.fileName())
 
-    original_content = rv.content
+    # original_content = rv.content
 
     if rv.status_code != 200:
         LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))

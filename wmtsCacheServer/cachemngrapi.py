@@ -3,18 +3,15 @@ import json
 from pathlib import Path
 from shutil import rmtree
 
-from qgis.PyQt.QtCore import (
-    QRegularExpression,
-)
-
+from qgis.PyQt.QtCore import QRegularExpression
 from qgis.server import (
-    QgsServerException,
-    QgsServerOgcApiHandler,
     QgsServerOgcApi,
+    QgsServerOgcApiHandler,
     QgsServerRequest,
 )
 
 from .helper import CacheHelper
+
 
 def read_metadata(rootdir: Path) -> dict:
     """ Read metadata
@@ -32,18 +29,18 @@ def read_metadata(rootdir: Path) -> dict:
         h = d.name
 
         tiledir = d / 'tiles'
-        layers = [l.name for l in tiledir.glob('*') if l.is_dir()]
+        layers = [layer.name for layer in tiledir.glob('*') if layer.is_dir()]
 
         data[h] = {
-           'project': c.read_text(),
-           'layers': layers,
+            'project': c.read_text(),
+            'layers': layers,
         }
-    #metadata.update(data=data)
+    # metadata.update(data=data)
     metadata['data'] = data
     return metadata
 
 
-class QgsServerApiException():
+class QgsServerApiException:
 
     def __init__(self, code, message, mime_type = 'application/json', response_code = 200):
         self.code = code
@@ -82,7 +79,7 @@ class CacheMngrApiHandler(QgsServerOgcApiHandler):
         resp_content, mime_type = ex.formatResponse()
         resp = context.response()
         resp.clear()
-        resp.setStatusCode(ex.responseCode());
+        resp.setStatusCode(ex.responseCode())
         resp.setHeader("Content-Type", mime_type)
         resp.write(resp_content)
 
@@ -91,7 +88,7 @@ class CacheMngrLandingPageHandler(CacheMngrApiHandler):
     """Project listing handler"""
 
     def path(self):
-        return QRegularExpression("(\.json|\.html|/)")
+        return QRegularExpression(r"(\.json|\.html|/)")
 
     def operationId(self):
         return "getLandingPage"
@@ -112,7 +109,7 @@ class CacheMngrLandingPageHandler(CacheMngrApiHandler):
         """List projects"""
 
         data = {
-            "links": [] #self.links(context)
+            "links": []  # self.links(context)
         }
         data['links'].append({
             "href": self.href(context, "/collections"),
@@ -140,7 +137,7 @@ class CacheMngrCollectionsHandler(CacheMngrApiHandler):
     """Project listing handler"""
 
     def path(self):
-        return QRegularExpression("/collections(\.json|\.html|/)")
+        return QRegularExpression(r"/collections(\.json|\.html|/)")
 
     def operationId(self):
         return "describeCollections"
@@ -165,7 +162,7 @@ class CacheMngrCollectionsHandler(CacheMngrApiHandler):
         data = {
             "cache_layout": metadata['layout'],
             "collections": [],
-            "links": [] #self.links(context),
+            "links": []  # self.links(context),
         }
 
         for h, v in metadata['data'].items():
@@ -202,7 +199,7 @@ class CacheMngrCollectionHandler(CacheMngrApiHandler):
     """Project listing handler"""
 
     def path(self):
-        return QRegularExpression("/collections/(?<collectionId>[^/]+?)(\.json|\.html|/)")
+        return QRegularExpression(r"/collections/(?<collectionId>[^/]+?)(\.json|\.html|/)")
 
     def operationId(self):
         return "describeCollection"
@@ -266,13 +263,17 @@ class CacheMngrCollectionHandler(CacheMngrApiHandler):
                     data['layers'].append({
                         'id': layer,
                         'links': [{
-                            "href": self.href(context, "/layers/{}".format(layer), QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                            "href": self.href(
+                                context,
+                                "/layers/{}".format(layer),
+                                QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)
+                            ),
                             "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                             "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                             "title": "Cache layer",
                         }]
                     })
-            data['links'] = [] #self.links(context)
+            data['links'] = []  # self.links(context)
             data['links'].append({
                 "href": self.href(context, "/docs", QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
                 "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
@@ -311,7 +312,7 @@ class CacheMngrCollectionDocsHandler(CacheMngrApiHandler):
     """Project listing handler"""
 
     def path(self):
-        return QRegularExpression("/collections/(?<collectionId>[^/]+?)/docs(\.json|\.html|/)")
+        return QRegularExpression(r"/collections/(?<collectionId>[^/]+?)/docs(\.json|\.html|/)")
 
     def operationId(self):
         return "describeDocs"
@@ -362,7 +363,7 @@ class CacheMngrCollectionDocsHandler(CacheMngrApiHandler):
                 data['id'] = h
                 data['project'] = project
                 data['documents'] = 0
-                data['links'] = [] #self.links(context)
+                data['links'] = []  # self.links(context)
 
                 docroot = cache.get_documents_root(project)
                 for _ in docroot.glob('*.xml'):
@@ -396,7 +397,7 @@ class CacheMngrCollectionLayersHandler(CacheMngrApiHandler):
     """Project listing handler"""
 
     def path(self):
-        return QRegularExpression("/collections/(?<collectionId>[^/]+?)/layers(\.json|\.html|/)")
+        return QRegularExpression(r"/collections/(?<collectionId>[^/]+?)/layers(\.json|\.html|/)")
 
     def operationId(self):
         return "describeLayers"
@@ -450,13 +451,17 @@ class CacheMngrCollectionLayersHandler(CacheMngrApiHandler):
                     data['layers'].append({
                         'id': layer,
                         'links': [{
-                            "href": self.href(context, "/layers/{}".format(layer), QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                            "href": self.href(
+                                context,
+                                "/layers/{}".format(layer),
+                                QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)
+                            ),
                             "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                             "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                             "title": "Cache layer",
                         }]
                     })
-                data['links'] = [] #self.links(context)
+                data['links'] = []  # self.links(context)
 
                 html_metadata = {
                     "pageTitle": self.linkTitle(),
@@ -486,7 +491,7 @@ class CacheMngrCollectionLayerHandler(CacheMngrApiHandler):
     """Project listing handler"""
 
     def path(self):
-        return QRegularExpression("/collections/(?<collectionId>[^/]+?)/layers/(?<layerId>[^/]+?)(\.json|\.html|/)")
+        return QRegularExpression(r"/collections/(?<collectionId>[^/]+?)/layers/(?<layerId>[^/]+?)(\.json|\.html|/)")
 
     def operationId(self):
         return "describeLayer"
@@ -541,7 +546,7 @@ class CacheMngrCollectionLayerHandler(CacheMngrApiHandler):
                 self.write(data, context)
             else:
                 data['id'] = layer_id
-                data['links'] = [] #self.links(context)
+                data['links'] = []  # self.links(context)
 
                 html_metadata = {
                     "pageTitle": self.linkTitle(),
@@ -568,6 +573,7 @@ class CacheMngrCollectionLayerHandler(CacheMngrApiHandler):
 
     def parameters(self, context):
         return []
+
 
 class CacheMngrApi(QgsServerOgcApi):
 

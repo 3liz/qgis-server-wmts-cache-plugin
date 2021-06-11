@@ -49,7 +49,7 @@ Once installed, the `wmtscache` cache command can be used to manage the cache co
 - list cache content infos
 - delete project cache content
 - delete specific layer cached tiles  
- 
+
 ## WMTS Cache manager API
 
 The WMTS Cache manager API provides these URLs:
