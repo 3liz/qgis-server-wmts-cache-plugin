@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+from pathlib import Path
 
 import lxml.etree
 
@@ -130,6 +131,9 @@ def test_wmts_document_cache_time(client):
 
     assert projmtime < ndocmtime
     assert docmtime < ndocmtime
+
+    # Clean files after testing
+    Path(client.getprojectpath("france_parts_copy.qgs")).unlink()
 
 
 def test_wmts_document_tile(client):
