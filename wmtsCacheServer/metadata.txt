@@ -1,14 +1,15 @@
-
-[general] 
+[general]
 name=wmtsCacheServer
-version=1.1.0
+version=master
 qgisMinimumVersion=3.4
-description=Cache disque pour les tuiles WMTS
-author=David Marteau 
-email=dmarteau@3liz.com 
+description=WMTS caching mechanism on disk for QGIS Server
+about=WMTS caching mechanism on disk for QGIS Server
+author=3Liz
+email=info@3liz.com
 server=True 
 tags=server, wmts, cache
+changelog=changelog
 
-
-
-
+homepage=https://github.com/3liz/qgis-server-wmts-cache-plugin
+tracker=https://github.com/3liz/qgis-server-wmts-cache-plugin/issues
+repository=https://github.com/3liz/qgis-server-wmts-cache-plugin
