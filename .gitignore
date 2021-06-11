@@ -1,5 +1,14 @@
+# IDE
+.idea/
 
-*.pyc 
+# Python
+*.pyc
+.venv
+venv
+
+# QGIS-Plugin-CI
+wmtsCacheServer.*.zip
+
 .DS_Store
 
 .cache
@@ -19,4 +28,3 @@ factory.manifest
 
 build
 dist
-
