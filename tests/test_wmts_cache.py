@@ -1,6 +1,7 @@
-import os
 import logging
+import os
 import shutil
+
 import lxml.etree
 
 from qgis.core import QgsProject

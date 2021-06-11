@@ -24,8 +24,8 @@
 
 import os
 
-from typing import Union
 from pathlib import Path
+from typing import Union
 
 
 def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:

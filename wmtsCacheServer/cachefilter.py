@@ -6,16 +6,20 @@
 
 import traceback
 
+from contextlib import contextmanager
+from datetime import datetime
+from pathlib import Path
+from shutil import rmtree
+from typing import TypeVar, Union
+
 from qgis.core import Qgis, QgsMessageLog, QgsProject
-from qgis.server import QgsServerCacheFilter, QgsServerRequest, QgsServerInterface
 from qgis.PyQt.QtCore import QByteArray
 from qgis.PyQt.QtXml import QDomDocument
-
-from pathlib import Path
-from typing import Union, TypeVar
-from contextlib import contextmanager
-from shutil import rmtree
-from datetime import datetime
+from qgis.server import (
+    QgsServerCacheFilter,
+    QgsServerInterface,
+    QgsServerRequest,
+)
 
 from .helper import CacheHelper
 

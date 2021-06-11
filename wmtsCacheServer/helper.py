@@ -4,10 +4,11 @@
     Copyright: (C) 2019 3Liz
 """
 import json
-from pathlib import Path
-from typing import TypeVar, Dict
-from hashlib import md5
+
 from datetime import datetime
+from hashlib import md5
+from pathlib import Path
+from typing import Dict, TypeVar
 
 from .layouts import layouts
 

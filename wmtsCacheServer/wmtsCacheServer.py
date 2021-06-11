@@ -7,11 +7,13 @@
 import os
 import tempfile
 
-from qgis.core import Qgis, QgsMessageLog
-from qgis.server import QgsServerInterface
 from pathlib import Path
 
+from qgis.core import Qgis, QgsMessageLog
+from qgis.server import QgsServerInterface
+
 from .cachefilter import DiskCacheFilter
+
 
 class wmtsCacheServer:
     """ Plugin for QGIS server
