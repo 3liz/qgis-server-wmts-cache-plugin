@@ -24,20 +24,20 @@
 
 import os
 
-from typing import Union, Tuple
+from typing import Union
 from pathlib import Path
 
 
 def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
     """ TileCache compatible layout
-    
+
         scheme: zz/xxx/xxx/xxx/yyy/yyy/yyy.format
     """
-    try: 
+    try:
       level = "%02d" % int(z)
     except ValueError:
       level = z
-    
+
     parts = (
         level,
         "%03d" % (x // 1000000),
@@ -53,28 +53,28 @@ def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: st
 
 def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
     """ MapProxy layout
-    
+
         scheme: zz/xxxx/xxxx/yyyy/yyyy.format
     """
-    try: 
+    try:
       level = "%02d" % int(z)
     except ValueError:
       level = z
 
     parts = (
-      level,
-      "%04d" % (x // 10000),
-      "%04d" % ((x) % 10000),
-      "%04d" % (y // 10000),
-      "%04d" % (y % 10000)
+        level,
+        "%04d" % (x // 10000),
+        "%04d" % ((x) % 10000),
+        "%04d" % (y // 10000),
+        "%04d" % (y % 10000)
     )
 
     return (root / os.path.join(*parts)).with_suffix(file_ext)
 
 
 def tile_location_tms(root: Path, x: int, y: int, z: Union[int,str], file_ext: str) -> Path:
-    """ TMS compatible layout 
-    
+    """ TMS compatible layout
+
         schema: z/x/y.format
     """
     return (root / os.path.join( str(z), str(x), str(y))).with_suffix(file_ext)
@@ -85,7 +85,7 @@ def tile_location_reverse_tms(root: Path, x: int, y: int, z: Union[int,str], fil
 
         schema: x/y/z.format
     """
-    return (root / os.path.join( str(y), str(x), str(z))).with_suffix(file_ext) 
+    return (root / os.path.join( str(y), str(x), str(z))).with_suffix(file_ext)
 
 
 layouts = {
@@ -94,7 +94,3 @@ layouts = {
     'tms': tile_location_tms,
     'reverse_tms': tile_location_tms
 }
-
-
-
-

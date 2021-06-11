@@ -4,10 +4,12 @@
     Copyright: (C) 2019 3Liz
 """
 
-def serverClassFactory(serverIface: 'QgsServerInterface') -> 'wmtsCacheServer':
+from qgis.server import QgsServerInterface
+
+
+def serverClassFactory(serverIface: 'QgsServerInterface'):
     """ Plugin entry point
     """
-    # save reference to the QGIS interface                 
+    # save reference to the QGIS interface
     from .wmtsCacheServer import wmtsCacheServer
     return wmtsCacheServer(serverIface)
-

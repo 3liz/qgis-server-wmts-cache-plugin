@@ -3,15 +3,13 @@
 
 import os
 import sys
-import traceback
 import argparse
 import json
 
 from pathlib import Path
-from typing import Union, Mapping, TypeVar, Dict, List
+from typing import List
 from shutil import rmtree
 
-from .layouts import layouts
 from .helper import CacheHelper
 
 
@@ -20,10 +18,9 @@ def read_metadata(rootdir: Path) -> dict:
     """
     print('Reading cache infos from %s' % rootdir, file=sys.stderr)
 
-    
     metadata = rootdir / 'wmts.json'
     if not metadata.exists():
-        print("Cannot read cache metadata %s" %  metadata)
+        print("Cannot read cache metadata %s" % metadata)
         sys.exit(1)
 
     metadata = json.loads(metadata.read_text())
@@ -32,13 +29,13 @@ def read_metadata(rootdir: Path) -> dict:
     for c in rootdir.glob('*.inf'):
         d = c.with_suffix('')
         h = d.name
-      
+
         tiledir = d / 'tiles'
-        layers  = [l.name for l in tiledir.glob('*') if l.is_dir()]
+        layers  = [layer.name for layer in tiledir.glob('*') if layer.is_dir()]
 
         data[h] = {
-           'project': c.read_text(),
-           'layers' : layers,
+            'project': c.read_text(),
+            'layers' : layers,
         }
     metadata.update(data=data)
     return metadata
@@ -50,12 +47,13 @@ def match_projects( glob: str, data: dict ) -> List[str]:
     if glob == '*':
         return data
 
-    match = lambda p: p.match(glob) or p.match(glob+'.qgs') or p.name == glob or p.name == glob+'.qgs'
+    # E731 do not assign a lambda expression, use a def
+    match = lambda p: p.match(glob) or p.match(glob + '.qgs') or p.name == glob or p.name == glob + '.qgs'
 
     return { h:v for h,v in data.items() if match(Path(v['project'])) }
 
 
-def list_command( args, rootdir: Path, metadata: dict ) -> None: 
+def list_command( args, rootdir: Path, metadata: dict ) -> None:
     """ List cached content
     """
     data = match_projects(args.name, metadata['data'])
@@ -73,10 +71,10 @@ def list_command( args, rootdir: Path, metadata: dict ) -> None:
         for h,v in data.items():
             print('##')
             print('hash:  ', h)
-            print('path:  ', v['project']) 
-            print('layers:',','.join(v['layers']))  
+            print('path:  ', v['project'])
+            print('layers:',','.join(v['layers']))
         print('###')
-        
+
 
 def delete_command( args, rootdir: Path, metadata: dict ) -> None:
     """ Delete cached content
@@ -158,4 +156,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

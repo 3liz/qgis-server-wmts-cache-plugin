@@ -205,7 +205,7 @@ def find_plugins(pluginpath: str) -> Generator[str,None,None]:
                     Qgis.QGIS_VERSION.split('-')[0]))
             continue
 
-        yield os.path.basename(plugin)        
+        yield os.path.basename(plugin)
 
 
 server_plugins = {}

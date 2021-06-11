@@ -113,7 +113,7 @@ def test_wmts_document_cache_time(client):
     docmtime = os.stat(docpath).st_mtime
     projmtime = project.lastModified().toMSecsSinceEpoch() / 1000.0
 
-    assert  projmtime < docmtime
+    assert projmtime < docmtime
 
     project.write()
     projmtime = project.lastModified().toMSecsSinceEpoch() / 1000.0

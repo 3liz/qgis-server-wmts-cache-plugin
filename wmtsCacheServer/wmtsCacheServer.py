@@ -8,6 +8,7 @@ import os
 import tempfile
 
 from qgis.core import Qgis, QgsMessageLog
+from qgis.server import QgsServerInterface
 from pathlib import Path
 
 from .cachefilter import DiskCacheFilter
@@ -17,7 +18,7 @@ class wmtsCacheServer:
     """
 
     def __init__(self, serverIface: 'QgsServerInterface') -> None:
-        # save reference to the QGIS interface         
+        # save reference to the QGIS interface
         self.serverIface = serverIface
 
         # Ensure that configuration is OK
@@ -25,7 +26,7 @@ class wmtsCacheServer:
         if not rootpathstr:
             # Create cache in /tmp/org.qgis.wmts/cache
             rootpathstr = os.path.join(tempfile.gettempdir(),'org.qgis.wmts')
-        
+
         self.rootpath = Path(rootpathstr)
         self.rootpath.mkdir(mode=0o750, parents=True, exist_ok=True)
 
@@ -41,10 +42,6 @@ class wmtsCacheServer:
                                          debug=debug_headers), 50 )
 
     def create_filter(self, layout: str=None) -> DiskCacheFilter:
-        """ Create a new filter instance 
+        """ Create a new filter instance
         """
         return DiskCacheFilter(self.serverIface, self.rootpath, layout or 'tc')
-
-
-
-

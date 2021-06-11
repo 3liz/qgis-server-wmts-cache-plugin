@@ -3,10 +3,9 @@
     author: David Marteau (3liz)
     Copyright: (C) 2019 3Liz
 """
-import os
 import json
 from pathlib import Path
-from typing import Union, Mapping, TypeVar, Dict
+from typing import TypeVar, Dict
 from hashlib import md5
 from datetime import datetime
 
@@ -15,6 +14,7 @@ from .layouts import layouts
 Hash = TypeVar('Hash')
 
 METADATA_VERSION = '1.0'
+
 
 def get_image_sfx(fmt: str) -> str:
     """ Return suffix from mimetype
@@ -41,7 +41,7 @@ class CacheHelper:
         metadata = rootdir / 'wmts.json'
         metadata.write_text(json.dumps({
                 'layout': layout,
-            }))
+        }))
 
     def get_project_hash(self, ident: str) -> Hash:
         """ Attempt to create a hash from project infos
@@ -53,7 +53,9 @@ class CacheHelper:
         m.update(ident.encode())
         return m
 
-    def get_document_cache(self, project: str, params: Dict[str,str], suffix: str='.xml', create_dir: bool=False, last_modified: datetime=None) -> Path:
+    def get_document_cache(
+            self, project: str, params: Dict[str,str], suffix: str='.xml', create_dir: bool=False,
+            last_modified: datetime=None) -> Path:
         """ Create a cache path for the document
         """
         h = self.get_project_hash(project)
@@ -134,4 +136,3 @@ class CacheHelper:
                 inf.write_text(project)
 
         return p
-

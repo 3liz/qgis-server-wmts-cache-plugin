@@ -4,23 +4,19 @@
     Copyright: (C) 2019 3Liz
 """
 
-import os
 import traceback
 
-from qgis.core import Qgis, QgsMessageLog
-from qgis.server import QgsServerCacheFilter
+from qgis.core import Qgis, QgsMessageLog, QgsProject
+from qgis.server import QgsServerCacheFilter, QgsServerRequest, QgsServerInterface
 from qgis.PyQt.QtCore import QByteArray
 from qgis.PyQt.QtXml import QDomDocument
-from qgis.PyQt.QtGui import QImage
 
 from pathlib import Path
-from typing import Union, Mapping, TypeVar, Dict
+from typing import Union, TypeVar
 from contextlib import contextmanager
-from hashlib import md5
 from shutil import rmtree
 from datetime import datetime
 
-from .layouts import layouts
 from .helper import CacheHelper
 
 Hash = TypeVar('Hash')
@@ -166,11 +162,3 @@ class DiskCacheFilter(QgsServerCacheFilter):
                 return True
 
         return False
-
-
-
-
-
-
-
-

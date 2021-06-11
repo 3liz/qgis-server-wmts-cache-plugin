@@ -1,9 +1,11 @@
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, find_packages
 import os
+
 
 def parse_requirements( filename ):
     with open( filename ) as fp:
         return list(filter(None, (r.strip('\n ').partition('#')[0] for r in fp.readlines())))
+
 
 version_tag = "1.2.0"
 
@@ -30,7 +32,7 @@ setup(
     entry_points={
         'console_scripts': [
             'wmtscache = wmtsCacheServer.cachemngr:main',
-            ],
+        ],
     },
     classifiers=[
         "Environment :: Other Environment",
@@ -44,4 +46,3 @@ setup(
     ],
     **kwargs
 )
-
