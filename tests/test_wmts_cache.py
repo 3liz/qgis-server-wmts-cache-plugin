@@ -31,9 +31,9 @@ def test_wmts_document_cache(client):
     assert not os.path.exists(docroot.as_posix())
 
     parameters = {
-            'MAP': project.fileName(),
-            'REQUEST': 'GetCapabilities',
-            'SERVICE': 'WMTS'
+        'MAP': project.fileName(),
+        'REQUEST': 'GetCapabilities',
+        'SERVICE': 'WMTS'
     }
 
     # Get the cached path from the request parameters
@@ -91,9 +91,9 @@ def test_wmts_document_cache_time(client):
     assert not os.path.exists(docroot.as_posix())
 
     parameters = {
-            'MAP': project.fileName(),
-            'REQUEST': 'GetCapabilities',
-            'SERVICE': 'WMTS'
+        'MAP': project.fileName(),
+        'REQUEST': 'GetCapabilities',
+        'SERVICE': 'WMTS'
     }
 
     # Get the cached path from the request parameters
@@ -157,17 +157,17 @@ def test_wmts_document_tile(client):
     assert not os.path.exists(tileroot.as_posix())
 
     parameters = {
-            "MAP": project.fileName(),
-            "SERVICE": "WMTS",
-            "VERSION": "1.0.0",
-            "REQUEST": "GetTile",
-            "LAYER": "france_parts",
-            "STYLE": "",
-            "TILEMATRIXSET": "EPSG:4326",
-            "TILEMATRIX": "0",
-            "TILEROW": "0",
-            "TILECOL": "0",
-            "FORMAT": "image/png"
+        "MAP": project.fileName(),
+        "SERVICE": "WMTS",
+        "VERSION": "1.0.0",
+        "REQUEST": "GetTile",
+        "LAYER": "france_parts",
+        "STYLE": "",
+        "TILEMATRIXSET": "EPSG:4326",
+        "TILEMATRIX": "0",
+        "TILEROW": "0",
+        "TILECOL": "0",
+        "FORMAT": "image/png"
     }
 
     # Get the cached path from the request parameters

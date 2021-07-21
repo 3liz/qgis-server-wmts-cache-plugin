@@ -47,8 +47,8 @@ def match_projects( glob: str, data: dict ) -> List[str]:
     if glob == '*':
         return data
 
-    # E731 do not assign a lambda expression, use a def
-    match = lambda p: p.match(glob) or p.match(glob + '.qgs') or p.name == glob or p.name == glob + '.qgs'
+    def match( p ):
+        p.match(glob) or p.match(glob + '.qgs') or p.name == glob or p.name == glob + '.qgs'
 
     return { h:v for h,v in data.items() if match(Path(v['project'])) }
 

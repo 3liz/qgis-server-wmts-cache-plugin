@@ -34,9 +34,9 @@ def tile_location_tc(root: Path, x: int, y: int, z: Union[int,str], file_ext: st
         scheme: zz/xxx/xxx/xxx/yyy/yyy/yyy.format
     """
     try:
-      level = "%02d" % int(z)
+        level = "%02d" % int(z)
     except ValueError:
-      level = z
+        level = z
 
     parts = (
         level,
@@ -57,9 +57,9 @@ def tile_location_mp(root: Path, x: int, y: int, z: Union[int,str], file_ext: st
         scheme: zz/xxxx/xxxx/yyyy/yyyy.format
     """
     try:
-      level = "%02d" % int(z)
+        level = "%02d" % int(z)
     except ValueError:
-      level = z
+        level = z
 
     parts = (
         level,
