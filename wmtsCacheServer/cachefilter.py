@@ -28,7 +28,7 @@ Hash = TypeVar('Hash')
 
 @contextmanager
 def trap():
-    """ Define a trap context for catchinf exception
+    """ Define a trap context for catching exception
         and send them to error log
     """
     try:
@@ -99,8 +99,8 @@ class DiskCacheFilter(QgsServerCacheFilter):
         with trap():
             p = self.get_document_cache(project,request)
             if p.is_file():
-               p.unlink()
-               return True
+                p.unlink()
+                return True
 
         return False
 
@@ -119,7 +119,7 @@ class DiskCacheFilter(QgsServerCacheFilter):
         return self._cache.get_tile_cache(project.fileName(),request.parameters(),create_dir=create_dir)
 
     def setCachedImage(self, img: Union[QByteArray, bytes, bytearray],
-            project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
+                       project: 'QgsProject', request: 'QgsServerRequest', key: str) -> bool:
         """ Override QgsServerCacheFilter::setCachedImage
         """
         if request.parameters().get('SERVICE','').upper() == 'WMTS':
@@ -151,8 +151,8 @@ class DiskCacheFilter(QgsServerCacheFilter):
             with trap():
                 p = self.get_tile_cache(project,request)
                 if p.is_file():
-                   p.unlink()
-                   return True
+                    p.unlink()
+                    return True
 
         return False
 

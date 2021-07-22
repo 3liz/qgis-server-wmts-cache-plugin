@@ -1,7 +1,7 @@
 [general]
 name=wmtsCacheServer
 version=master
-qgisMinimumVersion=3.4
+qgisMinimumVersion=3.10
 description=WMTS caching mechanism on disk for QGIS Server
 about=WMTS caching mechanism on disk for QGIS Server
 author=3Liz

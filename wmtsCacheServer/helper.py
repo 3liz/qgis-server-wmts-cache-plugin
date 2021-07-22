@@ -40,9 +40,7 @@ class CacheHelper:
             raise ValueError("Unknown tile layout %s" % layout)
 
         metadata = rootdir / 'wmts.json'
-        metadata.write_text(json.dumps({
-                'layout': layout,
-        }))
+        metadata.write_text(json.dumps({'layout': layout,}))
 
     def get_project_hash(self, ident: str) -> Hash:
         """ Attempt to create a hash from project infos

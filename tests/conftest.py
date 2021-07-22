@@ -13,7 +13,7 @@ logging.disable(logging.NOTSET)
 LOGGER = logging.getLogger('server')
 LOGGER.setLevel(logging.DEBUG)
 
-from typing import Any, Dict, Generator, Mapping
+from typing import Any, Dict, Generator
 
 from qgis.core import Qgis, QgsApplication, QgsFontUtils, QgsProject
 from qgis.server import (
@@ -146,10 +146,25 @@ def client(request):
             self.server.handleRequest(request, response, project=qgsproject)
             return OWSResponse(response)
 
+        def delete(self, query: str, project: str=None) -> OWSResponse:
+            """ Return server response from query
+            """
+            request  = QgsBufferServerRequest(query, QgsServerRequest.DeleteMethod, {}, None)
+            response = QgsBufferServerResponse()
+            if project is not None and not os.path.isabs(project):
+                projectpath = self.datapath.join(project)
+                qgsproject  = QgsProject()
+                if not qgsproject.read(projectpath.strpath):
+                    raise ValueError("Error reading project '%s':" % projectpath.strpath)
+            else:
+                qgsproject = None
+            self.server.handleRequest(request, response, project=qgsproject)
+            return OWSResponse(response)
+
     return _Client()
 
 
-## 
+##
 ## Plugins
 ##
 
