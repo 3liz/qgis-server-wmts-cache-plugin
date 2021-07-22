@@ -53,20 +53,20 @@ Once installed, the `wmtscache` cache command can be used to manage the cache co
 ## WMTS Cache manager API
 
 The WMTS Cache manager API provides these URLs:
-* /wmtscache/?
+* `/wmtscache/?`
   * to get information on the WMTS disk cache
-* /wmtscache/collections/?
+* `/wmtscache/collections/?`
   * to get the list of collections, QGIS projects, that have WMTS disk cache
-* /wmtscache/collection/(?<collectionId>[^/]+)/?
+* `/wmtscache/collection/(?<collectionId>[^/]+)/?`
   * to get information on a collection, QGIS project, WMTS disk cache
   * to delete the collection, QGIS Project, WMTS disk cache
-* /wmtscache/collection/(?<collectionId>[^/]+)/docs/?
+* `/wmtscache/collection/(?<collectionId>[^/]+)/docs/?`
   * to get information on a collection, QGIS project, WMTS documents disk cache
   * to delete the collection, QGIS Project, WMTS documents disk cache
-* /wmtscache/collection/(?<collectionId>[^/]+)/layers/?
+* `/wmtscache/collection/(?<collectionId>[^/]+)/layers/?`
   * to get information on a collection, QGIS project, WMTS layers tiles disk cache
   * to delete the collection, QGIS Project, WMTS layers tiles disk cache
-* /wmtscache/collection/(?<collectionId>[^/]+)/layers/(?<layerid>[^/]+)/?
+* `/wmtscache/collection/(?<collectionId>[^/]+)/layers/(?<layerid>[^/]+)/?`
   * to get information on a collection, QGIS project, WMTS layer tiles disk cache
   * to delete the collection, QGIS Project, WMTS layer tiles disk cache
 
