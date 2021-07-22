@@ -79,6 +79,7 @@ class RequestHandler:
             self.write(chunk)
 
         self._finished = True
+        self._response.finish()
 
     def write(self, chunk: Union[str, bytes, dict]) -> None:
         """

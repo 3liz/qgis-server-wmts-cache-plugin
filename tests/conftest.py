@@ -131,35 +131,27 @@ def client(request):
         def getprojectpath(self, name: str) -> str:
             return self.datapath.join(name)
 
-        def get(self, query: str, project: str=None) -> OWSResponse:
+        def request(self, method, query:str, project: str=None, data: bytes=None,
+                    headers: dict={}) -> OWSResponse:
             """ Return server response from query
             """
-            request  = QgsBufferServerRequest(query, QgsServerRequest.GetMethod, {}, None)
+            request  = QgsBufferServerRequest(query, method, headers, data)
             response = QgsBufferServerResponse()
             if project is not None and not os.path.isabs(project):
                 projectpath = self.datapath.join(project)
                 qgsproject  = QgsProject()
                 if not qgsproject.read(projectpath.strpath):
-                    raise ValueError("Error reading project '%s':" % projectpath.strpath)
+                    raise ValueError(f"Error reading project '{projectpath.strpath}'")
             else:
                 qgsproject = None
             self.server.handleRequest(request, response, project=qgsproject)
             return OWSResponse(response)
 
-        def delete(self, query: str, project: str=None) -> OWSResponse:
-            """ Return server response from query
-            """
-            request  = QgsBufferServerRequest(query, QgsServerRequest.DeleteMethod, {}, None)
-            response = QgsBufferServerResponse()
-            if project is not None and not os.path.isabs(project):
-                projectpath = self.datapath.join(project)
-                qgsproject  = QgsProject()
-                if not qgsproject.read(projectpath.strpath):
-                    raise ValueError("Error reading project '%s':" % projectpath.strpath)
-            else:
-                qgsproject = None
-            self.server.handleRequest(request, response, project=qgsproject)
-            return OWSResponse(response)
+        def get(self, *args, **kwargs) -> OWSResponse:
+            return self.request(QgsServerRequest.GetMethod, *args, **kwargs)
+
+        def delete(self, *args, **kwargs) -> OWSResponse:
+            return self.request(QgsServerRequest.DeleteMethod, *args, **kwargs)
 
     return _Client()
 
