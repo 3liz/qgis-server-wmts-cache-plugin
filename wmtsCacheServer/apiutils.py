@@ -211,10 +211,10 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
         return f"WMTS Cache manager {self._name}"
 
     def description(self):
-        return f"WMTS Cache manager {self._name }"
+        return f"WMTS Cache manager {self._name}"
 
     def linkTitle(self):
-        return f"WMTS Cache manager {self._name }"
+        return f"WMTS Cache manager {self._name}"
 
     def templatePath(self, context):
         # No templates!
