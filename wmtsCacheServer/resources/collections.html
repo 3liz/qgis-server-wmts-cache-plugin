@@ -1,0 +1,14 @@
+<!-- template for the WFS3 API landing page -->
+{% include "header.html" %}
+
+    <h1>QGIS Server - {{ metadata.pageTitle }}</h1>
+
+    <h2>Available collections</h2>
+    {% for collection in collections %}
+        <h3><a href="{% for link in links_filter( collection.links, "type", "text/html" ) %}
+        {{ path_chomp( link.href ) }}
+        {% endfor %}">{{ collection.id }}</a></h3>
+
+    {% endfor %}
+
+{% include "footer.html" %}

@@ -33,8 +33,11 @@ def test_wmts_cachemngrapi_empty_cache(client):
 
     json_content = json.loads(rv.content)
     assert 'links' in json_content
-    assert len(json_content['links']) == 1
-    assert json_content['links'][0]['title'] == 'Cache collections'
+    assert len(json_content['links']) == 4
+    link_titles = list()
+    for link in json_content['links']:
+        link_titles.append(link['title'])
+    assert 'Cache collections' in link_titles
 
     qs = "/wmtscache/collections"
     rv = client.get(qs)
@@ -112,7 +115,7 @@ def test_wmts_cachemngrapi_cache_info(client):
         "TILEMATRIX": "0",
         "TILEROW": "0",
         "TILECOL": "0",
-        "FORMAT": "image/png" 
+        "FORMAT": "image/png"
     }
 
     # Get the cached path from the request parameters
@@ -148,7 +151,7 @@ def test_wmts_cachemngrapi_cache_info(client):
     assert len(json_content['collections']) == 1
 
     assert 'links' in json_content
-    assert len(json_content['links']) == 0
+    assert len(json_content['links']) == 2
 
     collection = json_content['collections'][0]
     assert 'id' in collection
@@ -169,7 +172,7 @@ def test_wmts_cachemngrapi_cache_info(client):
     assert json_content['project'] == client.getprojectpath("france_parts.qgs").strpath
 
     assert 'links' in json_content
-    assert len(json_content['links']) == 2
+    assert len(json_content['links']) == 3
 
     qs = "/wmtscache/collections/{}/docs".format(collection['id'])
     rv = client.get(qs)
@@ -187,7 +190,7 @@ def test_wmts_cachemngrapi_cache_info(client):
     assert json_content['documents'] == 1
 
     assert 'links' in json_content
-    assert len(json_content['links']) == 0
+    assert len(json_content['links']) == 1
 
     qs = "/wmtscache/collections/{}/layers".format(collection['id'])
     rv = client.get(qs)
@@ -205,7 +208,7 @@ def test_wmts_cachemngrapi_cache_info(client):
     assert len(json_content['layers']) == 1
 
     assert 'links' in json_content
-    assert len(json_content['links']) == 0
+    assert len(json_content['links']) == 1
 
     layer = json_content['layers'][0]
     assert 'id' in layer
@@ -221,7 +224,108 @@ def test_wmts_cachemngrapi_cache_info(client):
     assert json_content['id'] == layer['id']
 
     assert 'links' in json_content
-    assert len(json_content['links']) == 0
+    assert len(json_content['links']) == 1
+
+
+def test_wmts_cachemngrapi_cache_info_html(client):
+    """ Test the API with cache
+        /wmtscache.html
+        /wmtscache/collections
+        /wmtscache/collection/(?<collectionId>[^/]+?)
+        /wmtscache/collection/(?<collectionId>[^/]+?)/docs
+        /wmtscache/collection/(?<collectionId>[^/]+?)/layers
+        /wmtscache/collection/(?<collectionId>[^/]+?)/layers/(?<layerId>[^/]+?)
+    """
+    plugin = client.getplugin('wmtsCacheServer')
+    assert plugin is not None
+
+    # Create a filter
+    cachefilter = plugin.create_filter()
+
+    # Delete document
+    project = QgsProject()
+    project.setFileName(client.getprojectpath("france_parts.qgs").strpath)
+
+    # Get project document root path
+    docroot = cachefilter._cache.get_documents_root(project.fileName())
+
+    cachefilter.deleteCachedDocuments(project)
+
+    assert not os.path.exists(docroot.as_posix())
+
+    parameters = {
+        'MAP': project.fileName(),
+        'REQUEST': 'GetCapabilities',
+        'SERVICE': 'WMTS'
+    }
+
+    # Get the cached path from the request parameters
+    docpath = cachefilter._cache.get_document_cache(project.fileName(), parameters,'.xml').as_posix()
+
+    assert not os.path.exists(docpath)
+
+    # Make a request
+    qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
+    rv = client.get(qs, project.fileName())
+    assert rv.status_code == 200
+
+    # Test that document cache has been created
+    assert os.path.exists(docpath)
+
+    # Get project tiles root path
+    tileroot = cachefilter._cache.get_tiles_root(project.fileName())
+
+    cachefilter.deleteCachedImages(project)
+
+    assert not os.path.exists(tileroot.as_posix())
+
+    parameters = {
+        "MAP": project.fileName(),
+        "SERVICE": "WMTS",
+        "VERSION": "1.0.0",
+        "REQUEST": "GetTile",
+        "LAYER": "france_parts",
+        "STYLE": "",
+        "TILEMATRIXSET": "EPSG:4326",
+        "TILEMATRIX": "0",
+        "TILEROW": "0",
+        "TILECOL": "0",
+        "FORMAT": "image/png"
+    }
+
+    # Get the cached path from the request parameters
+    tilepath = cachefilter._cache.get_tile_cache(project.fileName(),parameters).as_posix()
+
+    assert not os.path.exists(tilepath)
+
+    # Make a request
+    qs = "?" + "&".join("%s=%s" % item for item in parameters.items())
+    rv = client.get(qs, project.fileName())
+
+    # original_content = rv.content
+
+    if rv.status_code != 200:
+        LOGGER.error(lxml.etree.tostring(rv.xml, pretty_print=True))
+
+    assert rv.status_code == 200
+
+    # Test that document cache has been created
+    assert os.path.exists(tilepath)
+
+    # Cache manager API requests
+    qs = "/wmtscache.html"
+    rv = client.get(qs)
+    assert rv.status_code == 200
+    assert rv.headers.get('Content-Type',"").startswith('text/html')
+
+    assert b'<h1>QGIS Server' in rv.content
+
+    qs = "/wmtscache/collections.html"
+    rv = client.get(qs)
+    assert rv.status_code == 200
+    assert rv.headers.get('Content-Type',"").startswith('text/html')
+
+    assert b'<h1>QGIS Server' in rv.content
 
 
 def test_wmts_cachemngrapi_delete_docs(client):
@@ -356,7 +460,7 @@ def test_wmts_cachemngrapi_delete_layer(client):
         "TILEMATRIX": "0",
         "TILEROW": "0",
         "TILECOL": "0",
-        "FORMAT": "image/png" 
+        "FORMAT": "image/png"
     }
 
     # Get the cached path from the request parameters
@@ -478,7 +582,7 @@ def test_wmts_cachemngrapi_delete_layers(client):
         "TILEMATRIX": "0",
         "TILEROW": "0",
         "TILECOL": "0",
-        "FORMAT": "image/png" 
+        "FORMAT": "image/png"
     }
 
     # Get the cached path from the request parameters
@@ -610,7 +714,7 @@ def test_wmts_cachemngrapi_delete_collection(client):
         "TILEMATRIX": "0",
         "TILEROW": "0",
         "TILECOL": "0",
-        "FORMAT": "image/png" 
+        "FORMAT": "image/png"
     }
 
     # Get the cached path from the request parameters
@@ -746,7 +850,7 @@ def test_wmts_cachemngrapi_layerid_error(client):
         "TILEMATRIX": "0",
         "TILEROW": "0",
         "TILECOL": "0",
-        "FORMAT": "image/png" 
+        "FORMAT": "image/png"
     }
 
     # Get the cached path from the request parameters

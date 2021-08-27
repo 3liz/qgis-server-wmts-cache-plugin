@@ -8,6 +8,7 @@
 import sys
 import json
 import traceback
+import os
 
 
 from pathlib import Path
@@ -64,10 +65,26 @@ class RequestHandler:
         pass
 
     def href(self, path: str="", extension: str="") -> str:
-        """ Returns an URL to self, to be used for links to the current resources 
+        """ Returns an URL to self, to be used for links to the current resources
             and as a base for constructing links to sub-resources
         """
-        return self._parent.href(self._context,path,extension)
+        return self._parent.href(self._context, path, extension)
+
+
+    def links(self) -> List[str]:
+        """Returns all the links for the given request
+        """
+        links = list()
+        current_ct = self._parent.contentTypeFromRequest(self._request)
+        for ct in self._parent.contentTypes():
+            links.append({
+                'href': self.href('', QgsServerOgcApi.contentTypeToExtension(ct) if ct != QgsServerOgcApi.JSON else ''),
+                'rel': QgsServerOgcApi.self if ct == current_ct else QgsServerOgcApi.alternate,
+                "type": QgsServerOgcApi.mimeType(ct),
+                "title": self.link_title()+' as '+QgsServerOgcApi.contentTypeToString(ct),
+            })
+        return links
+
 
     def finish(self, chunk: Optional[Union[str, bytes, dict]] = None) -> None:
         """ Terminate the request
@@ -86,10 +103,56 @@ class RequestHandler:
         """
         if not isinstance(chunk, (bytes, str, dict)):
             raise TypeError("write() only accepts bytes, unicode, and dict objects")
+
+        # Render HTML
+        content_type = self._parent.contentTypeFromRequest(self._request)
+        if content_type == QgsServerOgcApi.HTML:
+            self._write_html(chunk)
+        else:
+            self._write_json(chunk)
+
+
+    def _write_json(self, chunk: Union[str, bytes, dict]) -> None:
+        """
+        """
         if isinstance(chunk, dict):
             chunk = json.dumps(chunk, sort_keys=True)
         self.set_header('Content-Type', 'application/json;charset=utf-8')
         self._response.write(chunk)
+
+    def _write_html(self, chunk: Union[str, bytes, dict]) -> None:
+        """
+        """
+        if QgsServerOgcApi.HTML not in self._parent.contentTypes():
+            raise HTTPError(406)
+        if isinstance(chunk, str):
+            chunk = json.loads(chunk)
+        self._parent.write(chunk, self._context, self.html_metadata())
+
+    def link_title(self):
+        """
+        """
+        return ''
+
+    def template_path(self) -> str:
+        """
+        """
+        return ''
+
+    def html_metadata(self) -> dict:
+        """
+        """
+        return dict()
+
+    def html_parent_link(self, levels) -> str:
+        """
+        """
+        link = QgsServerOgcApiHandler.parentLink(self._request.url(), levels)
+
+        if link.endswith('/'):
+            return link[:-1]+'.html'
+
+        return link
 
     def set_status(self, status_code: int, reason: Optional[str]=None) -> None:
         """
@@ -113,10 +176,10 @@ class RequestHandler:
         self.write(dict(status="error" if status_code != 200 else "ok",
                         httpcode = status_code,
                         error    = { "message": self._reason }))
-        
+
         if status_code > 300:
             QgsMessageLog.logMessage(f"Returned HTTP Error {status_code}: {self._reason}" ,"wmtsCacheApi",Qgis.Critical)
-        
+
         if not self._finished:
             self.finish()
 
@@ -181,7 +244,7 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
     """
 
     # XXX We need to preserve instances from garbage
-    # collection 
+    # collection
     __instances = []
 
     def __init__(self, path: str, handler: Type[RequestHandler],
@@ -189,14 +252,20 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
                  kwargs: Dict={}):
 
         super().__init__()
+        self._content_types = []
         if content_types:
             self.setContentTypes(content_types)
+            self._content_types = content_types
         self._path = QRegularExpression(path)
         self._name = handler.__name__
         self._handler = handler
         self._kwargs = kwargs
+        self._template_path = ''
 
         self.__instances.append(self)
+
+    def contentTypes(self):
+        return self._content_types
 
     def path(self):
         return self._path
@@ -217,18 +286,18 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
         return f"WMTS Cache manager {self._name}"
 
     def templatePath(self, context):
-        # No templates!
-        return ''
+        return self._template_path
 
     def parameters(self, context):
         return []
 
     def handleRequest(self, context):
-        """ 
+        """
         """
         handler = self._handler(self,context)
         handler.initialize(**self._kwargs)
         handler.execute(self.values(context))
+        self._template_path = handler.template_path()
 
 
 class _ServerApi(QgsServerOgcApi):
