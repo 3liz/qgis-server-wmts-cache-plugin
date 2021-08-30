@@ -351,7 +351,9 @@ def init_cache_api(serverIface, cacherootdir: Path) -> None:
     """
     collectionid = r"collections/(?P<collectionid>[^/]+)"
 
+    # kwargs without content types for handlers only return JSON
     kwargs = dict(rootdir=cacherootdir)
+    # kwargs with content types for handlers return JSON and HTML
     extra_kwargs = dict(
         rootdir=cacherootdir,
         content_types=[QgsServerOgcApi.JSON, QgsServerOgcApi.HTML]
@@ -362,8 +364,8 @@ def init_cache_api(serverIface, cacherootdir: Path) -> None:
         (rf"/{collectionid}/layers/?", LayerCollection, kwargs),
         (rf"/{collectionid}/docs/?", DocumentCollection, kwargs),
         (rf"/{collectionid}/?", ProjectCollection,  kwargs),
-        (rf"/collections/?", CacheCollections, dict(**extra_kwargs)),
-        (rf"/?", LandingPage, dict(**extra_kwargs)),
+        (rf"/collections/?", CacheCollections, extra_kwargs)),
+        (rf"/?", LandingPage, extra_kwargs)),
     ]
 
     register_api_handlers(serverIface, '/wmtscache', 'CacheManagment', handlers,

@@ -330,8 +330,11 @@ def register_api_handlers(serverIface, rootpath: str, name: str, handlers: List[
     if activate_static_handler:
         api.registerHandler(QgsServerStaticHandler())
     for path,handler,kwargs in handlers:
-        content_types = kwargs.pop('content_types',[QgsServerOgcApi.JSON,])
+        # use a copy of kwargs to be able to modify it
+        ckwargs = dict(**kwargs)
+        content_types = ckwargs.pop('content_types',[QgsServerOgcApi.JSON,])
+        # register handler with kwargs copy
         api.registerHandler(RequestHandlerDelegate(path,handler,content_types=content_types,
-                                                   kwargs=kwargs))
+                                                   kwargs=ckwargs))
     serverIface.serviceRegistry().registerApi(api)
 
