@@ -230,7 +230,7 @@ def test_wmts_cachemngrapi_cache_info(client):
 def test_wmts_cachemngrapi_cache_info_html(client):
     """ Test the API with cache
         /wmtscache.html
-        /wmtscache/collections
+        /wmtscache/collections.hmtl
         /wmtscache/collection/(?<collectionId>[^/]+?)
         /wmtscache/collection/(?<collectionId>[^/]+?)/docs
         /wmtscache/collection/(?<collectionId>[^/]+?)/layers
@@ -319,6 +319,9 @@ def test_wmts_cachemngrapi_cache_info_html(client):
     assert rv.headers.get('Content-Type',"").startswith('text/html')
 
     assert b'<h1>QGIS Server' in rv.content
+    assert b'/wmtscache/static/style.css' in rv.content
+    assert b'/wmtscache/static/jsonFormatter/jsonFormatter.min.css' in rv.content
+    assert b'/wmtscache/static/jsonFormatter/jsonFormatter.min.js' in rv.content
 
     qs = "/wmtscache/collections.html"
     rv = client.get(qs)
@@ -327,6 +330,24 @@ def test_wmts_cachemngrapi_cache_info_html(client):
 
     assert b'<h1>QGIS Server' in rv.content
 
+
+def test_wmts_cachemngrapi_static(client):
+    """ Tests static handler
+    """
+    qs = "/wmtscache/static/style.css"
+    rv = client.get(qs)
+    assert rv.status_code == 200
+    assert rv.headers.get('Content-Type',"").startswith('text/css')
+
+    qs = "/wmtscache/static/jsonFormatter/jsonFormatter.min.css"
+    rv = client.get(qs)
+    assert rv.status_code == 200
+    assert rv.headers.get('Content-Type',"").startswith('text/css')
+
+    qs = "/wmtscache/static/jsonFormatter/jsonFormatter.min.js"
+    rv = client.get(qs)
+    assert rv.status_code == 200
+    assert rv.headers.get('Content-Type',"").startswith('application/javascript')
 
 def test_wmts_cachemngrapi_delete_docs(client):
     """ Test the API with to remove docs cache

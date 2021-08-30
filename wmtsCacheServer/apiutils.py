@@ -20,6 +20,7 @@ from qgis.PyQt.QtCore import QRegularExpression, QUrl
 from qgis.server import (
     QgsServerOgcApi,
     QgsServerOgcApiHandler,
+    QgsServerStaticHandler,
     QgsServerRequest,
 )
 
@@ -322,13 +323,15 @@ HandlerDefinition = Tuple[str,Type[RequestHandler],Dict]
 
 def register_api_handlers(serverIface, rootpath: str, name: str, handlers: List[HandlerDefinition],
                           descripton: Optional[str]=None,
-                          version: Optional[str]=None) -> None:
+                          version: Optional[str]=None,
+                          activate_static_handler: Optional[bool]=False) -> None:
 
     api = _ServerApi(serverIface, rootpath, name, descripton, version)
+    if activate_static_handler:
+        api.registerHandler(QgsServerStaticHandler())
     for path,handler,kwargs in handlers:
         content_types = kwargs.pop('content_types',[QgsServerOgcApi.JSON,])
         api.registerHandler(RequestHandlerDelegate(path,handler,content_types=content_types,
                                                    kwargs=kwargs))
-
     serverIface.serviceRegistry().registerApi(api)
 

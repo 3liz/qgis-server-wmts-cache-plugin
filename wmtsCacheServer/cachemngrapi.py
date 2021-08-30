@@ -366,6 +366,7 @@ def init_cache_api(serverIface, cacherootdir: Path) -> None:
         (rf"/?", LandingPage, dict(**extra_kwargs)),
     ]
 
-    register_api_handlers(serverIface, '/wmtscache', 'CacheManagment', handlers)
+    register_api_handlers(serverIface, '/wmtscache', 'CacheManagment', handlers,
+                          activate_static_handler=True)
 
 
