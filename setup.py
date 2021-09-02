@@ -37,7 +37,7 @@ setup(
     },
     # Add manifest to main package
     include_package_data=True,
-    package_data={"pyqgisserver": ['metadata.txt'] },
+    package_data={ "wmtsCacheServer": ['metadata.txt'] },
     classifiers=[
         "Environment :: Other Environment",
         "Intended Audience :: Developers",
