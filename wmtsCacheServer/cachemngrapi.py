@@ -6,7 +6,6 @@ from shutil import rmtree
 from typing import Optional, Tuple, Iterable, Dict
 
 from qgis.server import QgsServerOgcApi
-from qgis.core import Qgis, QgsMessageLog
 
 from .helper import CacheHelper
 from .apiutils import HTTPError, RequestHandler, register_api_handlers
@@ -51,7 +50,6 @@ def read_project_metadata( rootdir: Path, name: str ) -> Optional[Tuple[dict,Ite
     # (project, layers)
     return (project, layers)
 
-
 #
 # WMTS API Handlers
 #
@@ -84,7 +82,7 @@ class Collections(RequestHandler):
                 yield { 'id': name,
                         'project': project,
                         'links': [{
-                            "href": self.href(f"/{name})", QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                            "href": self.href(f"/{name}"),
                             "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                             "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                             "title": "Cache collection",
@@ -131,8 +129,7 @@ class ProjectCollection(RequestHandler,MetadataMixIn):
             for layer in layers:
                 yield { 'id': layer,
                         'links': [{ 
-                            'href': self.href(f"/layers/{layer})", \
-                                              QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                            'href': self.href(f"/layers/{layer}"),
                             'rel': QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                             'type': QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                             'title': "Cache layer",
@@ -144,13 +141,13 @@ class ProjectCollection(RequestHandler,MetadataMixIn):
             'layers' : list(links()),
             'links'  : [
                 {
-                    "href": self.href("/docs", QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                    "href": self.href("/docs"),
                     "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                     "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                     "title": "Cache collection documents",
                 },
                 {
-                    "href": self.href("/layers", QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                    "href": self.href("/layers"),
                     "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                     "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                     "title": "Cache collection layers",
@@ -225,8 +222,7 @@ class LayerCollection(RequestHandler,MetadataMixIn):
             for layer in layers:
                 yield { 'id': layer,
                         'links': [{
-                            'href': self.href(f"/layers/{layer})", \
-                                              QgsServerOgcApi.contentTypeToExtension(QgsServerOgcApi.JSON)),
+                            'href': self.href(f"/{layer}"),
                             'rel': QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                             'type': QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                             'title': "Cache layer",
@@ -299,8 +295,8 @@ def init_cache_api(serverIface, cacherootdir: Path) -> None:
         (rf"/{collectionid}/layers/?", LayerCollection, kwargs),
         (rf"/{collectionid}/docs/?", DocumentCollection, kwargs),
         (rf"/{collectionid}/?", ProjectCollection,  kwargs),
-        (rf"/collections/?", Collections, kwargs),
-        (rf"/?", LandingPage, kwargs),
+        (r"/collections/?", Collections, kwargs),
+        (r"/?", LandingPage, kwargs),
     ]
 
     register_api_handlers(serverIface, '/wmtscache', 'WMTSCacheManagment', handlers)

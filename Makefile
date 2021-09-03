@@ -51,7 +51,7 @@ lint:
 
 test: lint
 	mkdir -p $$(pwd)/.local $(LOCAL_HOME)/.cache
-	docker run --rm --name qgis-py-server-test-$(COMMITID) -w /src \
+	docker run --rm --name wmts-cache-test-$(COMMITID) -w /src \
 		-u $(BECOME_USER) \
 		-v $$(pwd):/src \
 		-v $$(pwd)/.local:/.local \
