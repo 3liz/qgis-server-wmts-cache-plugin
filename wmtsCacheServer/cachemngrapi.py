@@ -32,7 +32,7 @@ def read_metadata_collection(rootdir: Path) -> Tuple[dict,Iterable]:
             project = inf.read_text()
             # (name, project)
             yield (name,project)
-    
+
     return (metadata, collect())
 
 
@@ -58,13 +58,23 @@ class LandingPage(RequestHandler):
     """ Project collections listing handler
     """
     def get(self) -> None:
+
+        def extra_links():
+            """ Build links to collections
+            """
+            for ct in self._parent.contentTypes():
+                if ct != QgsServerOgcApi.JSON:
+                    # Collections only implement JSON
+                    continue
+                yield {
+                    "href": self.href("/collections", QgsServerOgcApi.contentTypeToExtension(ct) if ct != QgsServerOgcApi.JSON else ''),
+                    "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.data),
+                    "type": QgsServerOgcApi.mimeType(ct),
+                    "title": 'WMTS Cache manager Collections as '+QgsServerOgcApi.contentTypeToString(ct),
+                }
+
         data = {
-            'links': [{
-                "href": self.href("/collections"),
-                "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.data),
-                "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
-                "title": "Cache collections",
-            }]
+            'links': self.links() + list(extra_links())
         }
         self.write(data)
 
@@ -77,21 +87,31 @@ class Collections(RequestHandler):
         """
         metadata, coll = read_metadata_collection(self.rootdir)
 
-        def links():
+        def collection_links(name):
+            """ Build links to collection
+            """
+            for ct in self._parent.contentTypes():
+                if ct != QgsServerOgcApi.JSON:
+                    # ProjectCollection only implement JSON
+                    continue
+                yield {
+                    "href": self.href(f"/{name}", QgsServerOgcApi.contentTypeToExtension(ct) if ct != QgsServerOgcApi.JSON else ''),
+                    "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
+                    "type": QgsServerOgcApi.mimeType(ct),
+                    "title": 'WMTS Cache manager ProjectCollection as '+QgsServerOgcApi.contentTypeToString(ct),
+                }
+
+        def collections():
             for name,project in coll:
                 yield { 'id': name,
                         'project': project,
-                        'links': [{
-                            "href": self.href(f"/{name}"),
-                            "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
-                            "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
-                            "title": "Cache collection",
-                        }]}
+                        'links': list(collection_links(name))
+                        }
 
         data = {
             "cache_layout": metadata['layout'],
-            "collections": list(links()),
-            "links": [],  # self.links(context)
+            "collections": list(collections()),
+            "links": self.links(),
         }
 
         self.write(data)
@@ -100,7 +120,7 @@ class Collections(RequestHandler):
 class MetadataMixIn:
 
     def get_metadata(self, collectionid: str):
-        """ Return project metadata 
+        """ Return project metadata
         """
         try:
             project, layers = read_project_metadata(self.rootdir, collectionid)
@@ -121,14 +141,14 @@ class ProjectCollection(RequestHandler,MetadataMixIn):
     """
 
     def get(self, collectionid: str):
-        """ Return project metadata 
+        """ Return project metadata
         """
         metadata, project, layers = self.get_metadata(collectionid)
 
-        def links():
+        def layer_collections():
             for layer in layers:
                 yield { 'id': layer,
-                        'links': [{ 
+                        'links': [{
                             'href': self.href(f"/layers/{layer}"),
                             'rel': QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                             'type': QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
@@ -138,8 +158,8 @@ class ProjectCollection(RequestHandler,MetadataMixIn):
         data = {
             'id': collectionid,
             'project': project,
-            'layers' : list(links()),
-            'links'  : [
+            'layers' : list(layer_collections()),
+            'links'  : self.links() + [
                 {
                     "href": self.href("/docs"),
                     "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
@@ -151,9 +171,9 @@ class ProjectCollection(RequestHandler,MetadataMixIn):
                     "rel": QgsServerOgcApi.relToString(QgsServerOgcApi.item),
                     "type": QgsServerOgcApi.mimeType(QgsServerOgcApi.JSON),
                     "title": "Cache collection layers",
-                },                
+                },
             ],
-        } 
+        }
 
         self.write(data)
 
@@ -178,7 +198,7 @@ class ProjectCollection(RequestHandler,MetadataMixIn):
 
 
 class DocumentCollection(RequestHandler,MetadataMixIn):
-    """ Return documentation about project 
+    """ Return documentation about project
     """
 
     def get(self, collectionid):
@@ -192,7 +212,7 @@ class DocumentCollection(RequestHandler,MetadataMixIn):
             'id': collectionid,
             'project': project,
             'documents': sum( 1 for _ in docroot.glob('*.xml')),
-            'links': [], # self.links(context)
+            'links': self.links(),
         }
 
         self.write(data)
@@ -210,7 +230,7 @@ class DocumentCollection(RequestHandler,MetadataMixIn):
 
 
 class LayerCollection(RequestHandler,MetadataMixIn):
-    """ 
+    """
     """
 
     def get(self, collectionid):
@@ -218,7 +238,7 @@ class LayerCollection(RequestHandler,MetadataMixIn):
         """
         metadata,project,layers = self.get_metadata(collectionid)
 
-        def links():
+        def layer_collections():
             for layer in layers:
                 yield { 'id': layer,
                         'links': [{
@@ -231,8 +251,8 @@ class LayerCollection(RequestHandler,MetadataMixIn):
         data = {
             'id': collectionid,
             'project': project,
-            'layers' : list(links()),
-            'links'  : [], # self.links(context)
+            'layers' : list(layer_collections()),
+            'links'  : self.links(),
         }
 
         self.write(data)
@@ -254,19 +274,19 @@ class LayerCache(RequestHandler,MetadataMixIn):
     """
 
     def get( self, collectionid: str, layerid: str) -> None:
-        """ 
+        """
         """
         metadata, project, layers = self.get_metadata(collectionid)
         if layerid not in layers:
             raise HTTPError(404,reason=f"Layer '{layerid}' not found")
-       
+
         data = {
             'id': layerid,
-            'links':[],
+            'links':self.links(),
         }
         self.write(data)
 
-    
+
     def delete( self, collectionid: str, layerid: str) -> None:
         """ List projects
         """
@@ -274,7 +294,7 @@ class LayerCache(RequestHandler,MetadataMixIn):
         if layerid not in layers:
             raise HTTPError(404,reason=f"Layer '{layerid}' not found")
 
-        cache = self.cache_helper(metadata)   
+        cache = self.cache_helper(metadata)
         cache = CacheHelper(self.rootdir, metadata['layout'])
 
         # Remove tiles
