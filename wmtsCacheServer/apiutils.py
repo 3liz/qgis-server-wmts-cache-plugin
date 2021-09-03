@@ -64,7 +64,7 @@ class RequestHandler:
         pass
 
     def href(self, path: str="", extension: str="") -> str:
-        """ Returns an URL to self, to be used for links to the current resources 
+        """ Returns an URL to self, to be used for links to the current resources
             and as a base for constructing links to sub-resources
         """
         return self._parent.href(self._context,path,extension)
@@ -113,10 +113,10 @@ class RequestHandler:
         self.write(dict(status="error" if status_code != 200 else "ok",
                         httpcode = status_code,
                         error    = { "message": self._reason }))
-        
+
         if status_code > 300:
             QgsMessageLog.logMessage(f"Returned HTTP Error {status_code}: {self._reason}" ,"wmtsCacheApi",Qgis.Critical)
-        
+
         if not self._finished:
             self.finish()
 
@@ -181,7 +181,7 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
     """
 
     # XXX We need to preserve instances from garbage
-    # collection 
+    # collection
     __instances = []
 
     def __init__(self, path: str, handler: Type[RequestHandler],
@@ -189,14 +189,21 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
                  kwargs: Dict={}):
 
         super().__init__()
+        self._content_types = []
         if content_types:
             self.setContentTypes(content_types)
+            self._content_types = content_types
         self._path = QRegularExpression(path)
         self._name = handler.__name__
         self._handler = handler
         self._kwargs = kwargs
 
         self.__instances.append(self)
+
+    def contentTypes(self):
+        """ QgsServerOgcApiHandler::contentTypes not available in Python bindings
+        """
+        return self._content_types
 
     def path(self):
         return self._path
@@ -224,7 +231,7 @@ class RequestHandlerDelegate(QgsServerOgcApiHandler):
         return []
 
     def handleRequest(self, context):
-        """ 
+        """
         """
         handler = self._handler(self,context)
         handler.initialize(**self._kwargs)
