@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>WMTS Cache manager</title>
+        <!-- Custom styles  -->
+        <link href="flexbox.css"  rel="stylesheet">
+        <link href="index.css"    rel="stylesheet">
+    </head>
+    <body>
+        <div id="header">
+            <h1 id="header-label">WMTS Cache Manager</h1>
+        </div>
+        <div id="main-pane" class="hbox">
+            <div id="project-pane" class="vbox">
+                <label for="project-input">Projects</label>
+                <select id="project-input" name="projects" size="10" onchange="on_project_changed(this)">
+                </select> 
+            </div> 
+            <div id="data-pane" class="vbox" status="notset">
+                <div id="data-header" class="hbox justify-between items-center">
+                    <h2 id="project-label">Project Name</h2>
+                    <button title="Remove all project's items"
+                        onclick="remove_project()">Remove</button>
+                </div>
+                <div class="hbox info-box">
+                    <span class="info-label">Documents in cache:</span>
+                    <span class="info-value" id="docs-info-label" data-value="n/a"></span>
+                    <span class="flex"></span>
+                    <button title="Remove all documents"
+                        onclick="remove_all_documents()">Remove documents</button>
+                </div>
+                <div class="hbox info-box">
+                    <span class="info-label">Layers in cache:</span>
+                    <span class="info-value" id="layers-info-label" data-value="n/a"></span>
+                    <span class="flex"></span>
+                    <button title="Remove all tiles"
+                        onclick="remove_all_tiles()">Remove all tiles</button>
+                </div>
+                <div class="hbox">
+                    <div id="layer-pane" class="vbox">
+                        <div id="layer-header" class="hbox">
+                            <label for="layer-input">Layers:</label>
+                            <span class="flex"></span>
+                            <button id="remove-layer-btn" title="Remove layer tiles"
+                                onclick="remove_selected_tiles()">Remove layer tiles</button>
+                        </div>
+                        <select id="layer-input" name="layers" size="15" multiple
+                           onchange="on_layers_changed(this)">
+                        </select>
+                    </div>
+                </div>
+                <div id="data-footer" class="hbox justify-left">
+                    <button onclick="refresh_infos()">Refresh</button>
+                </div>
+            </div>
+        </div>
+        <script src="common.js"></script>
+        <script src="index.js"></script>
+        <script>initialize()</script>
+    </body>
+</html>
+

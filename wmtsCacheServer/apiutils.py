@@ -88,7 +88,7 @@ class RequestHandler:
             raise TypeError("write() only accepts bytes, unicode, and dict objects")
         if isinstance(chunk, dict):
             chunk = json.dumps(chunk, sort_keys=True)
-        self.set_header('Content-Type', 'application/json;charset=utf-8')
+            self.set_header('Content-Type', 'application/json;charset=utf-8')
         self._response.write(chunk)
 
     def set_status(self, status_code: int, reason: Optional[str]=None) -> None:

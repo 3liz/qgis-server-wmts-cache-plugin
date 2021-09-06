@@ -1,0 +1,2 @@
+include wmtsCacheServer/metadata.txt
+recursive-include wmtsCacheServer/resources/ *

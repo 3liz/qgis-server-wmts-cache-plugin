@@ -1,0 +1,73 @@
+
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+}
+
+
+#header {
+    border-bottom: 1px solid black;
+}
+
+#project-pane {
+    border-right: 1px solid black;
+}
+
+#project-pane > label {
+    padding: 8px;
+    font-weight: bold;
+}
+
+#project-input {
+    min-width: 20em;
+}
+
+#project-input > option {
+    border-bottom: 1px solid black;
+    padding: 20px;
+}
+
+#data-pane {
+    width: 40%;
+    padding-left: 40px;
+}
+
+#data-pane[status="notset"] {
+    visibility: hidden;
+} 
+
+#data-pane[status="set"] {
+    visibility: visible;
+} 
+
+
+#data-header {
+    border-bottom: 1px solid black; 
+    margin-bottom: 20px;
+}
+
+#data-footer {
+    margin-top: 20px;
+}
+
+.info-box {
+    margin-bottom: 0.5em;
+}
+
+.info-label {
+    width: 15em;
+}
+
+.info-value:after {
+    content: attr(data-value);
+}
+
+#layer-header {
+    margin-top: 1em;
+    margin-bottom: 20px;
+}
+
+#layer-input {
+   min-width: 30em;
+}
+

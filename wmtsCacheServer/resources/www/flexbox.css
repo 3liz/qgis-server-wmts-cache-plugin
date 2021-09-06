@@ -1,0 +1,103 @@
+/*Stack child items vertically*/
+.vbox {
+    display: flex;
+    flex-direction: column;
+}
+
+/*Stack child items horizontally*/
+.hbox {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Cross axis alignement */
+
+.align-start {
+    align-content: flex-start;
+}
+
+.align-end {
+    align-content: flex-end;
+}
+
+.align-center {
+    align-content: center;
+}
+
+.align-between {
+    align-content: space-between;
+}
+
+.align-around {
+    align-content: space-around;
+}
+
+.align-stretch {
+    align-content: stretch;
+}
+
+
+/* Main axis alignement */
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-around {
+    justify-content: space-around;
+}
+
+.justify-evenly {
+    justify-content: space-evenly;
+}
+
+/*Stretch item along parent's main-axis*/
+.flex {
+    flex: 1;
+}
+/*Stretch item along parent's cross-axis*/
+.stretch {
+    align-self: stretch;
+}
+
+/*Stretch child items along the cross-axis*/
+.items-stretch {
+    align-items: stretch;
+    align-content: stretch;
+}
+
+/*Stack child items to the cross-axis start*/
+.items-start {
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+/*Stack child items to the cross-axis center*/
+.items-center {
+    align-items: center;
+    align-content: center;
+}
+
+/*Stack child items to the cross-axis end.*/
+.items-end {
+    align-items: flex-end;
+    align-content: flex-end;
+}
+
+/*Wrap items to next line on main-axis*/
+.wrap {
+    flex-wrap: wrap;
+}
+

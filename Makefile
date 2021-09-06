@@ -43,6 +43,7 @@ dist: dirs
 	$(PYTHON) setup.py sdist --dist-dir=$(DIST)
 
 clean:
+	rm -rf *.egg-info
 	rm -rf $(BUILDDIR)
 
 # Checke setup.cfg for flake8 configuration
