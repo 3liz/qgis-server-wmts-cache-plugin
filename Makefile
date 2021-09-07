@@ -1,4 +1,7 @@
-SHELL:=bash
+SHELL = bash
+.ONESHELL:
+.PHONY: env
+
 #
 # wmts plugin makefile
 #
@@ -12,6 +15,7 @@ REGISTRY_PREFIX=$(REGISTRY_URL)/
 FLAVOR:=release
 
 BECOME_USER:=$(shell id -u)
+BECOME_GROUP:=$(shell id -g)
 
 QGIS_IMAGE=$(REGISTRY_PREFIX)qgis-platform:$(FLAVOR)
 
@@ -60,4 +64,27 @@ test: lint
 		-e PIP_CACHE_DIR=/.cache \
 		-e PYTEST_ADDOPTS="$(TEST_OPTS)" \
 		$(QGIS_IMAGE) ./tests/run-tests.sh
+
+BECOME_USER:=$(shell id -u)
+BECOME_GROUP:=$(shell id -g)
+CACHEDIR:=.wmts_cache
+
+run: env
+	cd tests && docker-compose up -V --force-recreate
+
+stop:
+	cd tests && docker-compose down -v --remove-orphans
+
+env:
+	@echo "Creating environment file for docker-compose"
+	@mkdir tests/$(CACHEDIR)
+	@cat <<-EOF > tests/.env
+		WORKDIR=$(shell pwd)
+		CACHEDIR=$(CACHEDIR)
+		QGIS_VERSION=$(FLAVOR)
+		QGIS_USER_ID=$(BECOME_USER)
+		QGIS_USER_GID=$(BECOME_GROUP)
+		SERVER_HTTP_PORT=127.0.0.1:8888
+		SERVER_MANAGEMENT_PORT=127.0.0.1:19876
+		EOF
 

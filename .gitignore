@@ -28,3 +28,6 @@ factory.manifest
 
 build
 dist
+
+.env
+.wmts_cache
